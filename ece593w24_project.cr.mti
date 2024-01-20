@@ -1,0 +1,8 @@
+S:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv {1 {vlog -work work -vopt -sv -stats=none S:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv
+QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
+-- Compiling module Asynch_FIFO
+
+Top level modules:
+	Asynch_FIFO
+
+} {} {}}
