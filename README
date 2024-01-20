@@ -1,0 +1,2 @@
+The Asynchronous FIFO is designed to provide efficient and synchronized data storage and retrieval in a multi-clock domain environment. 
+Design is done using SystemVerilog and Verification using UVM methodology.
