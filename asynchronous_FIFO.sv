@@ -8,7 +8,7 @@
 
 // FIFO top-level module
 module fifo1 #( parameter DSIZE = 8,
-				parameter ASIZE = 4)
+		parameter ASIZE = 4)
 ( output logic [DSIZE-1:0] rdata,
   output logic wfull,
   output logic rempty,
@@ -30,7 +30,7 @@ endmodule
 
 // FIFO memory buffer
 module fifomem #(  parameter DATASIZE = 8, // Memory data word width
-				   parameter ADDRSIZE = 4) // Number of mem address bits
+		   parameter ADDRSIZE = 4) // Number of mem address bits
 ( output logic [DATASIZE-1:0] rdata,
   input  logic [DATASIZE-1:0] wdata,
   input  logic [ADDRSIZE-1:0] waddr, raddr,
