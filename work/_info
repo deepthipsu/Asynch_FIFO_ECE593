@@ -1,6 +1,27 @@
 m255
 K4
 z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
 !s11f vlog 2023.3 2023.07, Jul 17 2023
 13
 !s112 1.1
@@ -8,30 +29,497 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-d//thoth.cecs.pdx.edu/Home03/chevuru/My Documents/SV/ece571f23-proj
-vAsynch_FIFO
-2S:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv
-DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
-!s110 1705715620
+Z1 d//thoth.cecs.pdx.edu/Home03/chevuru/My Documents/SV/ece571f23-proj
+Xasycn_fifo_masa_sv_unit
+Z2 2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asycn_fifo_masa.sv
+Z3 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z4 DXx4 work 11 definitions 0 22 If7Gke:lN;YY^I6zU`7zk3
+Z5 !s110 1706918033
+VP7Q:LUQTZ4``8=84hhgP;1
+r1
+!s85 0
 !i10b 1
-!s100 X4@1oHJ]jNOn8RacMmBU`2
-IkXG`X@gk`aSjGjhlC7HOo1
+!s100 F=AP1WGlX=mIP=1_9aGzf1
+IP7Q:LUQTZ4``8=84hhgP;1
+!i103 1
 S1
-dS:/ECE593/project/Asynch_FIFO_ECE593
-w1705715617
-8S:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv
-FS:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv
-!i122 0
-L0 5 3
-VDg1SIo80bB@j0V0VzS_@n1
-OL;L;2023.3;77
+Z6 dS:/Documents/ECE593/project/Asynch_FIFO_ECE593
+Z7 w1706915993
+Z8 8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asycn_fifo_masa.sv
+Z9 FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asycn_fifo_masa.sv
+!i122 44
+L0 9 0
+Z10 OL;L;2023.3;77
+31
+Z11 !s108 1706918032.000000
+Z12 !s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asycn_fifo_masa.sv|
+Z13 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asycn_fifo_masa.sv|
+!i113 0
+Z14 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z15 tCvgOpt 0
+vAsynch_FIFO
+Z16 2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv
+R3
+Z17 DXx4 work 11 definitions 0 22 :FnW2UIc0UbJF9hN^58cg1
+DXx4 work 25 asynchronous_FIFO_sv_unit 0 22 0z6jPXWii>7EB^hXeUB[@3
+Z18 !s110 1707007252
+Z19 VDg1SIo80bB@j0V0VzS_@n1
+r1
+!s85 0
+!i10b 1
+!s100 aUeNSHhLT]zU=ozVN9d^d3
+I]J[i44?6KhX@^ncR0ZaWo0
+!s105 asynchronous_FIFO_sv_unit
+S1
+R6
+Z20 w1707003577
+Z21 8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv
+Z22 FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv
+!i122 156
+L0 10 25
+R10
+31
+Z23 !s108 1707007252.000000
+Z24 !s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv|
+Z25 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv|
+!i113 0
+R14
+R15
+n@asynch_@f@i@f@o
+Xasynchronous_FIFO_sv_unit
+R16
+R3
+R17
+R18
+V0z6jPXWii>7EB^hXeUB[@3
+r1
+!s85 0
+!i10b 1
+!s100 ^[okHj9zjQFWIa1aSfbzD3
+I0z6jPXWii>7EB^hXeUB[@3
+!i103 1
+S1
+R6
+R20
+R21
+R22
+!i122 156
+L0 6 0
+R10
+31
+R23
+R24
+R25
+!i113 0
+R14
+R15
+nasynchronous_@f@i@f@o_sv_unit
+Xdefinitions
+2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv
+R3
+R18
+!i10b 1
+!s100 CGLS1A1]3Ib?FWQ`ITb4S1
+I:FnW2UIc0UbJF9hN^58cg1
+S1
+R6
+w1707006380
+8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv
+FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv
+!i122 157
+L0 1 0
+V:FnW2UIc0UbJF9hN^58cg1
+R10
 r1
 !s85 0
 31
-!s108 1705715620.000000
-!s107 S:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv|
-!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/ECE593/project/Asynch_FIFO_ECE593/Asynch_FIFO.sv|
+R23
+!s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv|
 !i113 0
-o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-tCvgOpt 0
-n@asynch_@f@i@f@o
+R14
+R15
+vfifo1
+R2
+R3
+R4
+Z26 DXx4 work 23 asycn_fifo_masa_sv_unit 0 22 P7Q:LUQTZ4``8=84hhgP;1
+R5
+R19
+r1
+!s85 0
+!i10b 1
+!s100 ]M^NJ6W_N5:FYEHfXRei?1
+I[NY;c=??VFz5Jzh2=PkPm1
+Z27 !s105 asycn_fifo_masa_sv_unit
+S1
+R6
+R7
+R8
+R9
+!i122 44
+L0 12 19
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+vfifo_ack
+Z28 2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv
+R3
+R17
+DXx4 work 16 fifo_ack_sv_unit 0 22 8QYkJBEHXM[ReFPanQ3VO1
+Z29 !s110 1707007253
+R19
+r1
+!s85 0
+!i10b 1
+!s100 RQnP1iKTZQbPTh0UldV_e2
+I>znQUVo7di5O:5BA^<@O;2
+!s105 fifo_ack_sv_unit
+S1
+R6
+Z30 w1707007243
+Z31 8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv
+Z32 FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv
+!i122 158
+L0 10 55
+R10
+31
+Z33 !s108 1707007253.000000
+Z34 !s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv|
+Z35 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv|
+!i113 0
+R14
+R15
+Xfifo_ack_sv_unit
+R28
+R3
+R17
+R29
+V8QYkJBEHXM[ReFPanQ3VO1
+r1
+!s85 0
+!i10b 1
+!s100 i08fTBLe5oBm@m0QU[EJ:3
+I8QYkJBEHXM[ReFPanQ3VO1
+!i103 1
+S1
+R6
+R30
+R31
+R32
+!i122 158
+L0 5 0
+R10
+31
+R33
+R34
+R35
+!i113 0
+R14
+R15
+vfifomem
+Z36 2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv
+R3
+R17
+DXx4 work 15 fifomem_sv_unit 0 22 ]H:MLaS79maCki=[cYLGK2
+R29
+R19
+r1
+!s85 0
+!i10b 1
+!s100 @=zJK^V1N<Vg<24Z;EX8=1
+I`alEh;RiH>Zn^AGob_i:12
+!s105 fifomem_sv_unit
+S1
+R6
+Z37 w1706996888
+Z38 8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv
+Z39 FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv
+!i122 159
+L0 8 25
+R10
+31
+R33
+Z40 !s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv|
+Z41 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv|
+!i113 0
+R14
+R15
+Xfifomem_sv_unit
+R36
+R3
+R17
+R29
+V]H:MLaS79maCki=[cYLGK2
+r1
+!s85 0
+!i10b 1
+!s100 <PN5_hz[G=LI5Cll3`Oki2
+I]H:MLaS79maCki=[cYLGK2
+!i103 1
+S1
+R6
+R37
+R38
+R39
+!i122 159
+Z42 L0 3 0
+R10
+31
+R33
+R40
+R41
+!i113 0
+R14
+R15
+vrptr_empty
+R2
+R3
+R4
+R26
+R5
+R19
+r1
+!s85 0
+!i10b 1
+!s100 z0NZC_Q[Y@oZ01z3DdNO?2
+I>O56mF7cAB_VSE<AINm?a3
+R27
+S1
+R6
+R7
+R8
+R9
+!i122 44
+L0 84 31
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+vsync_r2w
+Z43 2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv
+R3
+R17
+Z44 DXx4 work 16 sync_r2w_sv_unit 0 22 ?ddGek:BY3B_U92n>jn4o3
+R29
+R19
+r1
+!s85 0
+!i10b 1
+!s100 hKh2T]dmJAoJj:jd3ad6h2
+IGGfjMJYH:BVFl[c4>ToLG2
+Z45 !s105 sync_r2w_sv_unit
+S1
+R6
+Z46 w1707006946
+Z47 8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv
+Z48 FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv
+!i122 160
+L0 8 18
+R10
+31
+R33
+Z49 !s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv|
+Z50 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv|
+!i113 0
+R14
+R15
+Xsync_r2w_sv_unit
+R43
+R3
+R17
+R29
+V?ddGek:BY3B_U92n>jn4o3
+r1
+!s85 0
+!i10b 1
+!s100 No6K>F1UBUfW@3eDaS6@M1
+I?ddGek:BY3B_U92n>jn4o3
+!i103 1
+S1
+R6
+R46
+R47
+R48
+!i122 160
+R42
+R10
+31
+R33
+R49
+R50
+!i113 0
+R14
+R15
+vsync_r2w_tb
+R43
+R3
+R17
+R44
+R29
+R19
+r1
+!s85 0
+!i10b 1
+!s100 C6Pn:D<XDXioRj?@Ycg0N0
+IhjiUXRok2QeRI3E^`?KcK3
+R45
+S1
+R6
+R46
+R47
+R48
+!i122 160
+L0 28 32
+R10
+31
+R33
+R49
+R50
+!i113 0
+R14
+R15
+Tsync_r2w_tb_o
+!s110 1707006972
+Vz<VV<5o_Q5nGIf>F0TanD3
+04 11 4 work sync_r2w_tb fast 0
+R0
+Z51 !s12b OEM100
+Z52 !s124 OEM100
+Z53 o+acc
+R15
+nsync_r2w_tb_o
+Z54 OL;O;2023.3;77
+R1
+vsync_w2r
+Z55 2S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_w2r.sv
+R3
+R17
+DXx4 work 16 sync_w2r_sv_unit 0 22 ^JX^96SjP`eT4LC=nXo@S3
+Z56 !s110 1707007254
+R19
+r1
+!s85 0
+!i10b 1
+!s100 hhXZMSICFTejK16fHa5XX1
+ICQ^`9fI5_UleY4M@8hKFQ2
+!s105 sync_w2r_sv_unit
+S1
+R6
+Z57 w1707004819
+Z58 8S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_w2r.sv
+Z59 FS:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_w2r.sv
+!i122 161
+L0 7 18
+R10
+31
+Z60 !s108 1707007254.000000
+!s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_w2r.sv|
+Z61 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_w2r.sv|
+!i113 0
+R14
+R15
+Xsync_w2r_sv_unit
+R55
+R3
+R17
+R56
+V^JX^96SjP`eT4LC=nXo@S3
+r1
+!s85 0
+!i10b 1
+!s100 Q_j=:W>eic92F[nmPC98:1
+I^JX^96SjP`eT4LC=nXo@S3
+!i103 1
+S1
+R6
+R57
+R58
+R59
+!i122 161
+L0 2 0
+R10
+31
+R60
+Z62 !s107 S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_w2r.sv|
+R61
+!i113 0
+R14
+R15
+vwptr_full
+R2
+R3
+R4
+R26
+R5
+R19
+r1
+!s85 0
+!i10b 1
+!s100 6WG78zPI1hDGaV@WYk3L:3
+IP;o:0CO@zoV9=o3>ll6CK0
+R27
+S1
+R6
+R7
+R8
+R9
+!i122 44
+L0 118 35
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+vwptr_full_tb
+R2
+R3
+R4
+R26
+R5
+R19
+r1
+!s85 0
+!i10b 1
+!s100 =ZloOaEfLAHLVe;HH>4941
+IKWeN:8:DkYWgX5oIf]M5h3
+R27
+S1
+R6
+R7
+R8
+R9
+!i122 44
+L0 156 33
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+Twptr_full_tb_opt
+!s110 1706916187
+Vi>Wh6eQ2OJBJizXP?g>XY3
+04 12 4 work wptr_full_tb fast 0
+R0
+R51
+R52
+R53
+R15
+nwptr_full_tb_opt
+R54
+R1

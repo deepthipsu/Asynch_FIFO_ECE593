@@ -5,9 +5,9 @@ import definitions::*;
 
 // Write-domain to read-domain synchronizer
 module sync_w2r 
-( output logic [ADDRSIZE:0] rq1_wptr,
+( output logic [ADDRSIZE-1:0] rq1_wptr,
   output logic inc_o,
-  input  logic [ADDRSIZE:0] wptr,
+  input  logic [ADDRSIZE-1:0] wptr,
   input  logic inc, rclk, rrst_n);
 
  logic [ADDRSIZE:0]wptr_i;

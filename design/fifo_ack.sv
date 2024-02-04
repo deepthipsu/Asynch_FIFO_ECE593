@@ -14,7 +14,7 @@ module fifo_ack
   input  logic wptr, wen, 
   input logic [1:0]widle);
 
-logic [ADDRSIZE-1:0] size;
+logic [ADDRSIZE:0] size;
 
 always
 begin
@@ -22,7 +22,7 @@ begin
 if((wen & ~wack) | (ren & ~rack))
 	begin
 // Calculate fifo space available
-	size = (rptr > wptr) ? (rptr-wptr) : (10'd1024 - wptr + rptr);
+	size = (rptr > wptr) ? (rptr-wptr) : (11'd1024 - wptr + rptr);
 	if(size == 1024) begin remty = 1; wfull = 0; end
 	else if (size == 0) begin wfull = 1; remty = 0; end
 	else begin remty = 0; wfull = 0; end

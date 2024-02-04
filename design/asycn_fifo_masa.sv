@@ -6,6 +6,8 @@
 // http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf
 //////////////////////////////////////////////////////////
 
+import definitions::*;
+
 // FIFO top-level module
 module fifo1 #( parameter DSIZE = 8,
 				parameter ASIZE = 4)
@@ -26,6 +28,7 @@ module fifo1 #( parameter DSIZE = 8,
   wptr_full #(ASIZE) wptr_full (.*);
 
 endmodule
+
 
 
 // FIFO memory buffer
@@ -112,12 +115,14 @@ endmodule
 
 
 // Write pointer and full generation
-module wptr_full #( parameter ADDRSIZE = 4)
+module wptr_full // #( parameter ADDRSIZE = 4)
 ( output logic wfull,
   output logic [ADDRSIZE-1:0] waddr,
   output logic [ADDRSIZE :0] wptr,
   input  logic [ADDRSIZE :0] wq2_rptr,
   input  logic winc, wclk, wrst_n);
+
+timeunit 1ns/1ns;
 
   logic [ADDRSIZE:0] wbin;
   wire [ADDRSIZE:0] wgraynext, wbinnext;
@@ -144,4 +149,40 @@ module wptr_full #( parameter ADDRSIZE = 4)
   always_ff @(posedge wclk or negedge wrst_n)
     if (!wrst_n) wfull <= 1'b0;
     else wfull <= wfull_val;
+endmodule
+
+
+// test write pointer and full generation
+module wptr_full_tb;
+
+timeunit 1ns/1ns;
+
+logic wfull;
+logic [ADDRSIZE-1:0] waddr;
+logic [ADDRSIZE :0] wptr;
+logic [ADDRSIZE :0] wq2_rptr;
+logic winc, wclk, wrst_n;
+
+wptr_full wptr_full(.*);
+
+//initialization
+initial begin
+wclk = 0;
+wrst_n = 0;
+wq2_rptr = 101010101;
+$monitor("wfull = %b |, waddr = %b |, wptr = %b , wq2_rptr = %b | , winc = %b | , wclk = %b | , wrst_n = %b | ", 
+	wfull, waddr, wptr, wq2_rptr, winc, wclk, wrst_n );
+end
+
+//clock 
+always begin
+#wr_clk wclk = ~wclk;
+end
+
+//field assignments
+always @(posedge wclk) begin
+wq2_rptr = wptr;
+winc = 1;
+end
+
 endmodule
