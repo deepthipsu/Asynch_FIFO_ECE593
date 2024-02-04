@@ -7,7 +7,7 @@ import definitions::*;
 
 `timescale 1ns/100ps;
 
-module Asynch_FIFO (	output logic wfull, wack, 
+module asynchronous_FIFO (	output logic wfull, wack, 
   			output logic rempty, rack,
   			output logic [DATASIZE-1:0] rdata,
   			input  logic [DATASIZE-1:0] wdata,

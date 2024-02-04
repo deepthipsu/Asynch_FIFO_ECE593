@@ -17,15 +17,6 @@ QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
 Top level modules:
 	sync_w2r
 
-} {} {}} S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv
-QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
--- Compiling package asynchronous_FIFO_sv_unit
--- Importing package definitions
--- Compiling module Asynch_FIFO
-
-Top level modules:
-	Asynch_FIFO
-
 } {} {}} S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv
 QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
 -- Compiling package fifomem_sv_unit
@@ -41,5 +32,14 @@ QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
 
 Top level modules:
 	--none--
+
+} {} {}} S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifo_ack.sv
+QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
+-- Compiling package fifo_ack_sv_unit
+-- Importing package definitions
+-- Compiling module fifo_ack
+
+Top level modules:
+	fifo_ack
 
 } {} {}}
