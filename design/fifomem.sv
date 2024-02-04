@@ -21,6 +21,7 @@ module fifomem
 begin
   rdata <= (rack & ~remty) ? mem[rptr] : rdata;
   rinc <= (rack & ~remty) ? rinc+1 : rinc;
+  mem[rptr] <= 0;
 end
 
   always @(posedge wclk)

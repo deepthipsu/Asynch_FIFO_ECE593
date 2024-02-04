@@ -1,4 +1,13 @@
-S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv
+S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/asynchronous_FIFO.sv
+QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
+-- Compiling package asynchronous_FIFO_sv_unit
+-- Importing package definitions
+-- Compiling module asynchronous_FIFO
+
+Top level modules:
+	asynchronous_FIFO
+
+} {} {}} S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/sync_r2w.sv
 QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
 -- Compiling package sync_r2w_sv_unit
 -- Importing package definitions
@@ -16,15 +25,6 @@ QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
 
 Top level modules:
 	sync_w2r
-
-} {} {}} S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/fifomem.sv
-QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
--- Compiling package fifomem_sv_unit
--- Importing package definitions
--- Compiling module fifomem
-
-Top level modules:
-	fifomem
 
 } {} {}} S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv {1 {vlog -work work -vopt -sv -stats=none S:/Documents/ECE593/project/Asynch_FIFO_ECE593/design/definitions.sv
 QuestaSim-64 vlog 2023.3 Compiler 2023.07 Jul 17 2023
