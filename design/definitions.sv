@@ -1,8 +1,10 @@
 package definitions;
 
-parameter [3:0] ADDRSIZE = 4'd10;
-parameter [3:0] DATASIZE = 4'd8;
-logic [1:0] wr_clk = 2;
-
+parameter ADDRSIZE = 10;
+parameter DATASIZE = 8;
+//parameter DEPTH = 333;
+parameter WRITE_PERIOD = 2; // Number of clock cycles between successive writes
+parameter READ_PERIOD = 1; // Number of clock cycles between successive reads
+parameter BURST_LENGTH = 1024; // Burst length
 
 endpackage
