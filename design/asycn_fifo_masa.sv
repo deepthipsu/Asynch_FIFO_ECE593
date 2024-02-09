@@ -5,39 +5,33 @@
 // Verilog to SystemVerilog, based on Cliff Cumming's Simulation and Synthesis Techniques for Asynchronous FIFO Design
 // http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf
 //////////////////////////////////////////////////////////
-
 import definitions::*;
-
 // FIFO top-level module
-module fifo1 #( parameter DSIZE = 8,
-				parameter ASIZE = 4)
-( output logic [DSIZE-1:0] rdata,
-  output logic wfull,
-  output logic rempty,
-  input  logic [DSIZE-1:0] wdata,
-  input  logic winc, wclk, wrst_n,
-  input  logic rinc, rclk, rrst_n);
+module fifo ( output  [DATASIZE-1:0] rdata,
+  output  wfull,
+  output  rempty,
+  input   [DATASIZE-1:0] wdata,
+  input   winc, wclk, wrst_n,
+  input   rinc, rclk, rrst_n);
 
-  logic [ASIZE-1:0] waddr, raddr;
-  logic [ASIZE:0] wptr, rptr, wq2_rptr, rq2_wptr;
+  logic [ADDRSIZE-1:0] waddr, raddr;
+  logic [ADDRSIZE:0] wptr, rptr, wq2_rptr, rq2_wptr;
 
   sync_r2w sync_r2w (.*); 
   sync_w2r sync_w2r (.*);
-  fifomem #(DSIZE, ASIZE) fifomem (.*);
-  rptr_empty #(ASIZE) rptr_empty (.*);
-  wptr_full #(ASIZE) wptr_full (.*);
+  fifomem fifomem (.*);
+  rptr_empty rptr_empty (.*);
+  wptr_full wptr_full (.*);
 
 endmodule
 
 
-
 // FIFO memory buffer
-module fifomem #(  parameter DATASIZE = 8, // Memory data word width
-				   parameter ADDRSIZE = 4) // Number of mem address bits
+module fifomem 
 ( output logic [DATASIZE-1:0] rdata,
   input  logic [DATASIZE-1:0] wdata,
   input  logic [ADDRSIZE-1:0] waddr, raddr,
-  input  logic wclken, wfull, wclk);
+  input  logic winc, wfull, wclk);
 
   // RTL Verilog memory model
   localparam DEPTH = 1<<ADDRSIZE;
@@ -46,13 +40,13 @@ module fifomem #(  parameter DATASIZE = 8, // Memory data word width
   assign rdata = mem[raddr];
 
   always @(posedge wclk)
-    if (wclken && !wfull)
+    if (winc && !wfull)
       mem[waddr] <= wdata;
 endmodule
 
 
 // Read-domain to write-domain synchronizer
-module sync_r2w #( parameter ADDRSIZE = 4)
+module sync_r2w 
 ( output logic [ADDRSIZE:0] wq2_rptr,
   input  logic [ADDRSIZE:0] rptr,
   input  logic wclk, wrst_n);
@@ -66,7 +60,7 @@ endmodule
 
 
 // Write-domain to read-domain synchronizer
-module sync_w2r #( parameter ADDRSIZE = 4)
+module sync_w2r 
 ( output logic [ADDRSIZE:0] rq2_wptr,
   input  logic [ADDRSIZE:0] wptr,
   input  logic rclk, rrst_n);
@@ -81,7 +75,7 @@ endmodule
 
 
 // Read pointer and empty generation logic
-module rptr_empty #( parameter ADDRSIZE = 4)
+module rptr_empty
 ( output logic rempty,
   output logic [ADDRSIZE-1:0] raddr,
   output logic [ADDRSIZE :0] rptr,
@@ -115,14 +109,12 @@ endmodule
 
 
 // Write pointer and full generation
-module wptr_full // #( parameter ADDRSIZE = 4)
+module wptr_full
 ( output logic wfull,
   output logic [ADDRSIZE-1:0] waddr,
   output logic [ADDRSIZE :0] wptr,
   input  logic [ADDRSIZE :0] wq2_rptr,
   input  logic winc, wclk, wrst_n);
-
-timeunit 1ns/1ns;
 
   logic [ADDRSIZE:0] wbin;
   wire [ADDRSIZE:0] wgraynext, wbinnext;
@@ -149,40 +141,4 @@ timeunit 1ns/1ns;
   always_ff @(posedge wclk or negedge wrst_n)
     if (!wrst_n) wfull <= 1'b0;
     else wfull <= wfull_val;
-endmodule
-
-
-// test write pointer and full generation
-module wptr_full_tb;
-
-timeunit 1ns/1ns;
-
-logic wfull;
-logic [ADDRSIZE-1:0] waddr;
-logic [ADDRSIZE :0] wptr;
-logic [ADDRSIZE :0] wq2_rptr;
-logic winc, wclk, wrst_n;
-
-wptr_full wptr_full(.*);
-
-//initialization
-initial begin
-wclk = 0;
-wrst_n = 0;
-wq2_rptr = 101010101;
-$monitor("wfull = %b |, waddr = %b |, wptr = %b , wq2_rptr = %b | , winc = %b | , wclk = %b | , wrst_n = %b | ", 
-	wfull, waddr, wptr, wq2_rptr, winc, wclk, wrst_n );
-end
-
-//clock 
-always begin
-#wr_clk wclk = ~wclk;
-end
-
-//field assignments
-always @(posedge wclk) begin
-wq2_rptr = wptr;
-winc = 1;
-end
-
 endmodule
