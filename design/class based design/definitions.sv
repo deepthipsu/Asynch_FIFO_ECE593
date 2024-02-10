@@ -1,27 +1,23 @@
 //////////////////////////////////////////////////////////
 // Author: Masaaki Ishii (ishii@pdx.edu)
 // Date: 02-10-24
-// Description: interface for asynchronous FIFO in SystemVerilog translated from 
+// Description: Definitions for asynchronous FIFO in SystemVerilog translated from 
 // Verilog to SystemVerilog, based on Cliff Cumming's Simulation and Synthesis Techniques for Asynchronous FIFO Design
 // http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf
-// interface help from: https://www.chipverify.com/systemverilog/systemverilog-interface
+// class based testbench help from: https://verificationguide.com/systemverilog-examples/systemverilog-testbench-example-adder-2/
 //////////////////////////////////////////////////////////
-import definitions::*;
 
-interface intf;
-  logic [DATASIZE-1:0] rdata;
-  logic wfull;
-  logic rempty;
-  logic [DATASIZE-1:0] wdata;
-  logic winc, wclk, wrst_n;
-  logic rinc, rclk, rrst_n;
 
-  modport TB ( //modport from the testbench's perspective
-    input  wdata, winc, wclk, wrst_n, rinc, rclk, rrst_n,
-    output rdata, wfull,rempty);
+package definitions;
 
-  modport DUT ( // modport from the DUT's perspective
-    output rdata, wfull, rempty,
-    input  wdata, winc, wclk, wrst_n, rinc, rclk, rrst_n);
-
-endinterface
+parameter ADDRSIZE = 10;
+parameter DATASIZE = 8;
+//parameter DEPTH = 333;
+parameter WRITE_PERIOD = 2; // Number of clock cycles between successive writes
+parameter READ_PERIOD = 1; // Number of clock cycles between successive reads
+parameter BURST_LENGTH = 1024; // Burst length
+`include "transaction.sv"
+`include "generator.sv"
+`include "driver.sv"
+//`include "fifoInterface.sv"
+endpackage
