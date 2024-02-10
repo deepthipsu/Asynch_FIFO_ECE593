@@ -7,21 +7,54 @@
 //////////////////////////////////////////////////////////
 import definitions::*;
 // FIFO top-level module
-module fifo ( output  [DATASIZE-1:0] rdata,
-  output  wfull,
-  output  rempty,
-  input   [DATASIZE-1:0] wdata,
-  input   winc, wclk, wrst_n,
-  input   rinc, rclk, rrst_n);
+module fifo (intf.DUT fifoIntf);
 
   logic [ADDRSIZE-1:0] waddr, raddr;
   logic [ADDRSIZE:0] wptr, rptr, wq2_rptr, rq2_wptr;
 
-  sync_r2w sync_r2w (.*); 
-  sync_w2r sync_w2r (.*);
-  fifomem fifomem (.*);
-  rptr_empty rptr_empty (.*);
-  wptr_full wptr_full (.*);
+  sync_r2w sync_r2w (
+    .wq2_rptr(wq2_rptr),
+    .rptr(rptr),
+    .wclk(fifoIntf.wclk),
+    .wrst_n(fifoIntf.wrst_n)
+  ); 
+
+  sync_w2r sync_w2r (
+    .rq2_wptr(rq2_wptr),
+    .wptr(wptr),
+    .rclk(fifoIntf.rclk),
+    .rrst_n(fifoIntf.rrst_n)
+  );
+
+  fifomem fifomem (
+    .rdata(fifoIntf.rdata),
+    .wdata(fifoIntf.wdata),
+    .waddr(waddr),
+    .raddr(raddr),
+    .winc(fifoIntf.winc),
+    .wfull(fifoIntf.wfull),
+    .wclk(fifoIntf.wclk)
+  );
+
+  rptr_empty rptr_empty (
+    .rempty(fifoIntf.rempty),
+    .raddr(raddr),
+    .rptr(rptr),
+    .rq2_wptr(rq2_wptr),
+    .rinc(fifoIntf.rinc),
+    .rclk(fifoIntf.rclk),
+    .rrst_n(fifoIntf.rrst_n)
+  );
+
+  wptr_full wptr_full (
+    .wfull(fifoIntf.wfull),
+    .waddr(waddr),
+    .wptr(wptr),
+    .wq2_rptr(wq2_rptr),
+    .winc(fifoIntf.winc),
+    .wclk(fifoIntf.wclk),
+    .wrst_n(fifoIntf.wrst_n)
+  );
 
 endmodule
 
@@ -39,7 +72,7 @@ module fifomem
 
   assign rdata = mem[raddr];
 
-  always @(posedge wclk)
+  always_ff @(posedge wclk)
     if (winc && !wfull)
       mem[waddr] <= wdata;
 endmodule
@@ -86,12 +119,17 @@ module rptr_empty
   logic [ADDRSIZE:0] rgraynext, rbinnext;
 
   //-------------------
-  // GRAYSTYLE2 pointer
-  //-------------------
-  always_ff @(posedge rclk or negedge rrst_n)
-    if (!rrst_n) {rbin, rptr} <= '0;
-    else {rbin, rptr} <= {rbinnext, rgraynext};
 
+  // GRAYSTYLE2 pointer
+  always_ff @(posedge rclk or negedge rrst_n)
+    if (!rrst_n) begin
+rbin  <= 0;
+rptr <= 0;
+end
+    else begin
+rbin  <= rbinnext;
+rptr <= rgraynext;
+end
   // Memory read-address pointer (okay to use binary to address memory)
   assign raddr = rbin[ADDRSIZE-1:0];
   assign rbinnext = rbin + (rinc & ~rempty);
@@ -121,9 +159,14 @@ module wptr_full
 
   // GRAYSTYLE2 pointer
   always_ff @(posedge wclk or negedge wrst_n)
-    if (!wrst_n) {wbin, wptr} <= '0;
-    else {wbin, wptr} <= {wbinnext, wgraynext};
-
+    if (!wrst_n) begin
+wbin  <= 0;
+wptr <= 0;
+end
+    else begin
+wbin  <= wbinnext;
+wptr <= wgraynext;
+end
   // Memory write-address pointer (okay to use binary to address memory)
   assign waddr = wbin[ADDRSIZE-1:0];
   assign wbinnext = wbin + (winc & ~wfull);
