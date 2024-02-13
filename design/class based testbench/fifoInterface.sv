@@ -16,9 +16,9 @@ interface intf (input wclk, rclk);
   logic winc, wrst_n;
   logic rinc, rrst_n;
 
-  modport TB ( //modport from the testbench's perspective
-    input  wdata, winc, wclk, wrst_n, rinc, rclk, rrst_n,
-    output rdata, wfull,rempty);
+  //modport TB ( //modport from the testbench's perspective
+    //input  wdata, winc, wclk, wrst_n, rinc, rclk, rrst_n,
+    //output rdata, wfull,rempty);
 
   modport DUT ( // modport from the DUT's perspective
     output rdata, wfull, rempty,
