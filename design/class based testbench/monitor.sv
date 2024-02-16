@@ -32,9 +32,21 @@ class monitor;
       @(posedge vif.wclk) begin
       wait(vif.winc);
       trans.wdata   = vif.wdata;
-//      trans.rdata   = vif.rdata;
+      trans.winc   = vif.winc; 
+      trans.wptr2   = vif.wptr2;
+      
+      //mon2scb.put(trans);
+      //trans.display("[ Monitor1 ]");
+	end
+      @(posedge vif.rclk) begin
+      wait(vif.rinc);
+      trans.rdata   = vif.rdata;  
+      trans.rinc   = vif.rinc;
+	  trans.rptr2   = vif.rptr2;
+      trans.wfull   = vif.wfull;
+      trans.rempty  = vif.rempty;     
       mon2scb.put(trans);
-      trans.display("[ Monitor ]");
+      //trans.display("[ Monitor2 ]");
 	end
     end
   endtask

@@ -1,18 +1,29 @@
-//////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 // Author: Masaaki Ishii (ishii@pdx.edu)
 // Date: 01-25-24
 // Description: Asynchronous FIFO design in SystemVerilog translated from 
 // Verilog to SystemVerilog, based on Cliff Cumming's Simulation and Synthesis Techniques for Asynchronous FIFO Design
 // http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf
 //////////////////////////////////////////////////////////
+
 import definitions::*;
 `include "fifoInterface.sv"
 // FIFO top-level module
 module fifo (intf.DUT fifoIntf);
 
   logic [ADDRSIZE-1:0] waddr, raddr;
-  logic [ADDRSIZE:0] wptr, rptr, wq2_rptr, rq2_wptr;
+  logic [POINTERSIZE:0] wptr, rptr, wq2_rptr, rq2_wptr;
 
+  fifomem fifomem (
+    .rdata(fifoIntf.rdata),
+    .wdata(fifoIntf.wdata),
+    .waddr(waddr),
+    .raddr(raddr),
+    .winc(fifoIntf.winc),
+    .wfull(fifoIntf.wfull),
+    .wclk(fifoIntf.wclk)
+  );  
+  
   sync_r2w sync_r2w (
     .wq2_rptr(wq2_rptr),
     .rptr(rptr),
@@ -27,20 +38,11 @@ module fifo (intf.DUT fifoIntf);
     .rrst_n(fifoIntf.rrst_n)
   );
 
-  fifomem fifomem (
-    .rdata(fifoIntf.rdata),
-    .wdata(fifoIntf.wdata),
-    .waddr(waddr),
-    .raddr(raddr),
-    .winc(fifoIntf.winc),
-    .wfull(fifoIntf.wfull),
-    .wclk(fifoIntf.wclk)
-  );
-
   rptr_empty rptr_empty (
     .rempty(fifoIntf.rempty),
     .raddr(raddr),
     .rptr(rptr),
+    .rptr2(fifoIntf.rptr2),
     .rq2_wptr(rq2_wptr),
     .rinc(fifoIntf.rinc),
     .rclk(fifoIntf.rclk),
@@ -51,6 +53,7 @@ module fifo (intf.DUT fifoIntf);
     .wfull(fifoIntf.wfull),
     .waddr(waddr),
     .wptr(wptr),
+    .wptr2(fifoIntf.wptr2),
     .wq2_rptr(wq2_rptr),
     .winc(fifoIntf.winc),
     .wclk(fifoIntf.wclk),
@@ -68,24 +71,45 @@ module fifomem
   input  logic winc, wfull, wclk);
 
   // RTL Verilog memory model
-  localparam DEPTH = 1<<ADDRSIZE;
-  logic [DATASIZE-1:0] mem [0:DEPTH-1];
+  //localparam DEPTH = 1<<ADDRSIZE;
+  //logic [DATASIZE-1:0] mem [0:DEPTH-1];
+    logic [ADDRSIZE-1:0] wptr = 0;
+    logic [ADDRSIZE-1:0] rptr = 0;
+    // Read data from memory
+    assign rdata = mem[raddr];
 
-  assign rdata = mem[raddr];
+    // Write data to memory on positive edge of write clock
+    always_ff @(posedge wclk)
+    begin
+        if (winc && !wfull)
+            mem[waddr] <= wdata;
+    end
 
-  always_ff @(posedge wclk)
-    if (winc && !wfull)
-      mem[waddr] <= wdata;
+    // Increment write pointer with circular wrapping
+    always_ff @(posedge wclk)
+    begin
+        if (winc && !wfull)
+            wptr <= (wptr == DEPTH-1) ? 0 : wptr + 1;
+    end
+
+    // Increment read pointer with circular wrapping
+    always_ff @(posedge wclk)
+    begin
+        if (!wfull)
+            rptr <= (rptr == DEPTH-1) ? 0 : rptr + 1;
+    end
+
+
 endmodule
 
 
 // Read-domain to write-domain synchronizer
 module sync_r2w 
-( output logic [ADDRSIZE:0] wq2_rptr,
-  input  logic [ADDRSIZE:0] rptr,
+( output logic [POINTERSIZE:0] wq2_rptr,
+  input  logic [POINTERSIZE:0] rptr,
   input  logic wclk, wrst_n);
 
-  logic [ADDRSIZE:0] wq1_rptr;
+  logic [POINTERSIZE:0] wq1_rptr;
 
   always_ff @(posedge wclk or negedge wrst_n)
     if (!wrst_n) {wq2_rptr,wq1_rptr} <= 0;
@@ -95,11 +119,11 @@ endmodule
 
 // Write-domain to read-domain synchronizer
 module sync_w2r 
-( output logic [ADDRSIZE:0] rq2_wptr,
-  input  logic [ADDRSIZE:0] wptr,
+( output logic [POINTERSIZE:0] rq2_wptr,
+  input  logic [POINTERSIZE:0] wptr,
   input  logic rclk, rrst_n);
 
-  logic [ADDRSIZE:0] rq1_wptr;
+  logic [POINTERSIZE:0] rq1_wptr;
 
   always_ff @(posedge rclk or negedge rrst_n)
     if (!rrst_n) {rq2_wptr,rq1_wptr} <= 0;
@@ -111,28 +135,29 @@ endmodule
 // Read pointer and empty generation logic
 module rptr_empty
 ( output logic rempty,
-  output logic [ADDRSIZE-1:0] raddr,
-  output logic [ADDRSIZE :0] rptr,
-  input  logic [ADDRSIZE :0] rq2_wptr,
-  input  logic rinc, rclk, rrst_n);
+  output  [ADDRSIZE-1:0] raddr,
+  output logic [POINTERSIZE :0] rptr,
+  output logic [POINTERSIZE :0] rptr2,
+  input   [POINTERSIZE :0] rq2_wptr,
+  input   rinc, rclk, rrst_n);
 
-  logic [ADDRSIZE:0] rbin;
-  logic [ADDRSIZE:0] rgraynext, rbinnext;
+  logic [POINTERSIZE:0] rbin;
+  logic [POINTERSIZE:0] rgraynext, rbinnext;
 
   //-------------------
 
   // GRAYSTYLE2 pointer
   always_ff @(posedge rclk or negedge rrst_n)
     if (!rrst_n) begin
-rbin  <= 0;
-rptr <= 0;
+{rbin, rptr} <= 0;
+rptr2 <= 0;
 end
     else begin
-rbin  <= rbinnext;
-rptr <= rgraynext;
+{rbin ,rptr}  <= {rbinnext, rgraynext};
+rptr2 <= raddr;
 end
   // Memory read-address pointer (okay to use binary to address memory)
-  assign raddr = rbin[ADDRSIZE-1:0];
+  assign raddr = rbin[POINTERSIZE-1:0];
   assign rbinnext = rbin + (rinc & ~rempty);
   assign rgraynext = (rbinnext>>1) ^ rbinnext;
 
@@ -150,26 +175,27 @@ endmodule
 // Write pointer and full generation
 module wptr_full
 ( output logic wfull,
-  output logic [ADDRSIZE-1:0] waddr,
-  output logic [ADDRSIZE :0] wptr,
-  input  logic [ADDRSIZE :0] wq2_rptr,
-  input  logic winc, wclk, wrst_n);
+  output  [ADDRSIZE-1:0] waddr,
+  output logic [POINTERSIZE :0] wptr,
+  output logic [POINTERSIZE :0] wptr2,
+  input   [POINTERSIZE :0] wq2_rptr,
+  input   winc, wclk, wrst_n);
 
-  logic [ADDRSIZE:0] wbin;
-  wire [ADDRSIZE:0] wgraynext, wbinnext;
+  logic [POINTERSIZE:0] wbin;
+  wire [POINTERSIZE:0] wgraynext, wbinnext;
 
   // GRAYSTYLE2 pointer
-  always_ff @(posedge wclk or negedge wrst_n)
-    if (!wrst_n) begin
-wbin  <= 0;
-wptr <= 0;
+  always @(posedge wclk or negedge wrst_n)
+    if (!wrst_n) begin 
+{wbin, wptr} <= 0;
+wptr2 <=0;
 end
     else begin
-wbin  <= wbinnext;
-wptr <= wgraynext;
+{wbin,wptr} <= {wbinnext, wgraynext};
+wptr2 <= wgraynext;
 end
   // Memory write-address pointer (okay to use binary to address memory)
-  assign waddr = wbin[ADDRSIZE-1:0];
+  assign waddr = wbin[POINTERSIZE-1:0];
   assign wbinnext = wbin + (winc & ~wfull);
   assign wgraynext = (wbinnext>>1) ^ wbinnext;
 
@@ -179,10 +205,11 @@ end
   // (wgnext[ADDRSIZE-1] !=wq2_rptr[ADDRSIZE-1]) &&
   // (wgnext[ADDRSIZE-2:0]==wq2_rptr[ADDRSIZE-2:0]));
   //------------------------------------------------------------------
-  assign wfull_val = (wgraynext=={~wq2_rptr[ADDRSIZE:ADDRSIZE-1],
-								   wq2_rptr[ADDRSIZE-2:0]});
+  assign wfull_val = (wgraynext=={~wq2_rptr[POINTERSIZE:POINTERSIZE-1],
+								   wq2_rptr[POINTERSIZE-2:0]});
 
-  always_ff @(posedge wclk or negedge wrst_n)
+  always @(posedge wclk or negedge wrst_n)
     if (!wrst_n) wfull <= 1'b0;
     else wfull <= wfull_val;
 endmodule
+

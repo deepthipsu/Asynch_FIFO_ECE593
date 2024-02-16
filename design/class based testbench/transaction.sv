@@ -12,14 +12,20 @@ import definitions::*;
 
 class transaction;
 
-rand  logic [DATASIZE-1:0] wdata;
-logic [DATASIZE-1:0] rdata;
+randc  logic [DATASIZE-1:0] wdata;
+ logic [DATASIZE-1:0] rdata;
+  logic [ADDRSIZE:0] wptr2;
+  logic [ADDRSIZE:0] rptr2;
+    logic wfull;
+  logic rempty;
+    rand logic winc;
+  rand logic rinc;
 
   function void display(string name);
     $display("-------------------------");
     $display("- %s ",name);
     $display("-------------------------");
-    $display("- wdata = %0d",wdata);
+    $display("- wdata = %0d rdata = %0d",wdata, rdata);
     $display("-------------------------");
 endfunction
 

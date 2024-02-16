@@ -15,13 +15,14 @@ interface intf (input wclk, rclk);
   logic [DATASIZE-1:0] wdata;
   logic winc, wrst_n;
   logic rinc, rrst_n;
+  logic [ADDRSIZE :0] rptr2, wptr2;
 
   //modport TB ( //modport from the testbench's perspective
     //input  wdata, winc, wclk, wrst_n, rinc, rclk, rrst_n,
     //output rdata, wfull,rempty);
 
   modport DUT ( // modport from the DUT's perspective
-    output rdata, wfull, rempty,
+    output rdata, wfull, rempty,rptr2, wptr2,
     input  wdata, winc, wclk, wrst_n, rinc, rclk, rrst_n);
 
 endinterface

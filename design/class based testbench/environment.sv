@@ -65,9 +65,9 @@ class environment;
   task post_test();
     wait(gen.ended.triggered);
     wait(gen.repeat_count == driv.no_transactions);
-    wait(gen.repeat_count == scb.no_transactions);
+    //wait(gen.repeat_count == scb.no_transactions);
 
-#100;
+#30000;
   endtask  
   
   //run task
