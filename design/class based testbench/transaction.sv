@@ -13,7 +13,6 @@ import definitions::*;
 class transaction;
 
 rand  logic [DATASIZE-1:0] wdata;
-logic [DATASIZE-1:0] rdata;
 
   function void display(string name);
     $display("-------------------------");

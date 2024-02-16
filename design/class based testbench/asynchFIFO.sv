@@ -68,14 +68,20 @@ module fifomem
   input  logic winc, wfull, wclk);
 
   // RTL Verilog memory model
-  localparam DEPTH = 1<<ADDRSIZE;
-  logic [DATASIZE-1:0] mem [0:DEPTH-1];
+  //localparam DEPTH = 1<<ADDRSIZE;
+  logic [DATASIZE-1:0] mem [DEPTH]; //[0:DEPTH-1];
 
   assign rdata = mem[raddr];
 
   always_ff @(posedge wclk)
     if (winc && !wfull)
       mem[waddr] <= wdata;
+
+/*
+  always_comb
+    if (winc && !wfull)
+      mem[waddr] <= wdata;
+*/
 endmodule
 
 
@@ -102,8 +108,9 @@ module sync_w2r
   logic [ADDRSIZE:0] rq1_wptr;
 
   always_ff @(posedge rclk or negedge rrst_n)
-    if (!rrst_n) {rq2_wptr,rq1_wptr} <= 0;
-    else {rq2_wptr,rq1_wptr} <= {rq1_wptr,wptr};
+    if (!rrst_n) {rq2_wptr,rq1_wptr} <= 0; 
+ else {rq2_wptr,rq1_wptr} <= {rq1_wptr,wptr};
+
 endmodule
 
 
@@ -175,12 +182,12 @@ end
 
   //------------------------------------------------------------------
   // Simplified version of the three necessary full-tests:
-  // assign wfull_val=((wgnext[ADDRSIZE] !=wq2_rptr[ADDRSIZE] ) &&
-  // (wgnext[ADDRSIZE-1] !=wq2_rptr[ADDRSIZE-1]) &&
-  // (wgnext[ADDRSIZE-2:0]==wq2_rptr[ADDRSIZE-2:0]));
+  //assign wfull_val=((wgraynext[ADDRSIZE] != wq2_rptr[ADDRSIZE] ) &&  (wgraynext[ADDRSIZE-1] != wq2_rptr[ADDRSIZE-1]) &&  (wgraynext[ADDRSIZE-2:0]==wq2_rptr[ADDRSIZE-2:0]));
   //------------------------------------------------------------------
-  assign wfull_val = (wgraynext=={~wq2_rptr[ADDRSIZE:ADDRSIZE-1],
+  assign wfull_val = (wgraynext=={~wq2_rptr[ADDRSIZE:ADDRSIZE],
 								   wq2_rptr[ADDRSIZE-2:0]});
+//-------------------------------------------------------------------------
+//assign wfull_val = (wgraynext == wq2_rptr);
 
   always_ff @(posedge wclk or negedge wrst_n)
     if (!wrst_n) wfull <= 1'b0;

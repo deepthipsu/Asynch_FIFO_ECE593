@@ -57,7 +57,7 @@ endtask
     
     @( posedge vif.wclk) begin
 
-//  $display("[ DRIVER ] ----- in wclk  -----");
+  $display("[ DRIVER ] ----- in wclk  -----");
    // if (vif.winc && !vif.wfull) begin
 if (!vif.wfull) begin
     if (write_count == WRITE_PERIOD) begin
@@ -145,7 +145,7 @@ task main1;
     forever begin
 @( posedge vif.rclk) begin
 
-//  $display("[ DRIVER ] ----- in rclk  -----");
+  $display("[ DRIVER ] ----- in rclk  -----");
     if (vif.rempty) begin
     read_count <= 0;
 vif.rinc =1;

@@ -10,7 +10,7 @@
 
 package definitions;
 
-parameter ADDRSIZE = 10;
+parameter ADDRSIZE = 4;
 parameter DATASIZE = 8;
 parameter DEPTH = 333;
 parameter WRITE_PERIOD = 2; // Number of clock cycles between successive writes
