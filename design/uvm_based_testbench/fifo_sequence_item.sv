@@ -5,7 +5,9 @@
 // Verilog to SystemVerilog, based on Cliff Cumming's Simulation and Synthesis Techniques for Asynchronous FIFO Design
 // http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf
 // UVM testbench architecture help from https://verificationguide.com/uvm/uvm-testbench-architecture/
-//////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 import definitions::*;
 import uvm_pkg::*;
@@ -13,7 +15,7 @@ import uvm_pkg::*;
 class fifo_sequence_item extends uvm_sequence_item;
   //Utility and Field macros
 `include "uvm_macros.svh"
-  `uvm_object_utils(fifo_sequence_item)
+
 // data and control fields
   logic [DATASIZE-1:0] rdata;
   rand logic wfull;
@@ -23,11 +25,28 @@ class fifo_sequence_item extends uvm_sequence_item;
   rand logic rinc, rrst_n;
   logic [ADDRSIZE :0] rptr2, wptr2;
 
+  `uvm_object_utils_begin(fifo_sequence_item)
+    `uvm_field_int(rdata,UVM_ALL_ON)
+    `uvm_field_int(wfull,UVM_ALL_ON)
+    `uvm_field_int(rempty,UVM_ALL_ON)
+    `uvm_field_int(winc,UVM_ALL_ON)
+    `uvm_field_int(rinc,UVM_ALL_ON)
+    `uvm_field_int(wrst_n,UVM_ALL_ON)
+    `uvm_field_int(rrst_n,UVM_ALL_ON)
+    `uvm_field_int(rptr2,UVM_ALL_ON)
+    `uvm_field_int(wptr2,UVM_ALL_ON)
+    `uvm_field_int(wdata,UVM_ALL_ON)
+  `uvm_object_utils_end
+
+
   function new(string name = "fifo_sequence_item");
     super.new(name);
   endfunction
 
 endclass: fifo_sequence_item
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class fifo_sequencer extends uvm_sequencer#(fifo_sequence_item);
 `include "uvm_macros.svh"
@@ -63,36 +82,43 @@ class fifo_sequencer extends uvm_sequencer#(fifo_sequence_item);
 endclass: fifo_sequencer
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 class fifo_sequence extends uvm_sequence#(fifo_sequence_item);
   `uvm_object_utils(fifo_sequence)
   
+fifo_sequence_item req;
+
   //Constructor
   function new(string name = "fifo_sequence");
     super.new(name);
     `uvm_info("BASE_SEQ", "Inside Constructor!", UVM_HIGH)
   endfunction
   
-  task body();
+  virtual task body();
     `uvm_info("BASE_SEQ", "Inside body task!", UVM_HIGH)
     req = fifo_sequence_item::type_id::create("req");
-    wait_for_grant();
-    req.randomize();
-    send_request(req);
-    wait_for_item_done();
-
+	start_item(req);    
+	  if(!req.randomize()) $fatal("randomization failed");
+	finish_item(req);
   endtask: body
   
-endclass
+endclass: fifo_sequence
 
-class fifo_test_sequence extends fifo_sequence;
-  `uvm_object_utils(fifo_test_sequence)
+
+
+class fifo_write_sequence extends fifo_sequence;
+  `uvm_object_utils(fifo_write_sequence)
   
+parameter repeat_counts = 15;
+
   fifo_sequence_item item;
   
   //--------------------------------------------------------
   //Constructor
   //--------------------------------------------------------
-  function new(string name= "fifo_test_sequence");
+  function new(string name= "fifo_write_sequence");
     super.new(name);
     `uvm_info("TEST_SEQ", "Inside Constructor!", UVM_HIGH)
   endfunction
@@ -103,23 +129,60 @@ class fifo_test_sequence extends fifo_sequence;
   //--------------------------------------------------------
   task body();
     `uvm_info("TEST_SEQ", "Inside body task!", UVM_HIGH)
+repeat(repeat_counts) begin
     item = fifo_sequence_item::type_id::create("item");
     start_item(item);
-    item.randomize();
+    assert(item.randomize() with {rinc == 1'b0;});
     finish_item(item);
-        
+        end
+//#10;
   endtask: body
   
-endclass: fifo_test_sequence
+endclass: fifo_write_sequence
+
+
+class fifo_read_sequence extends fifo_sequence;
+  `uvm_object_utils(fifo_read_sequence)
+  
+  fifo_sequence_item item;
+  parameter repeat_counts = 15;
+  //--------------------------------------------------------
+  //Constructor
+  //--------------------------------------------------------
+  function new(string name= "fifo_read_sequence");
+    super.new(name);
+    `uvm_info("TEST_SEQ", "Inside Constructor!", UVM_HIGH)
+  endfunction
+  
+  
+  //--------------------------------------------------------
+  //Body Task
+  //--------------------------------------------------------
+  task body();
+    `uvm_info("TEST_SEQ", "Inside body task!", UVM_HIGH)
+repeat(repeat_counts) begin
+    item = fifo_sequence_item::type_id::create("item");
+    start_item(item);
+    assert(item.randomize() with {winc == 1'b0;});
+    finish_item(item);
+        end
+  endtask: body
+  
+endclass: fifo_read_sequence
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 class fifo_driver extends uvm_driver#(fifo_sequence_item);
   `uvm_component_utils(fifo_driver)
   
   virtual uvm_interface vif;
   fifo_sequence_item item;
-      logic [1:0] write_count = 0; // write idle cyle is 2
-    logic [1:0] read_count = 0; // read idle cycle is 1
-    logic [10:0] burst_count = 0; // 2^10 = 1024 
+//    logic [1:0] write_count = 0; // write idle cyle is 2
+//    logic [1:0] read_count = 0; // read idle cycle is 1
+//    logic [10:0] burst_count = 0; // 2^10 = 1024 
   
   //--------------------------------------------------------
   //Constructor
@@ -157,16 +220,19 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
   //--------------------------------------------------------
   //Run Phase
   //--------------------------------------------------------
-  task run_phase (uvm_phase phase);
+  virtual task run_phase (uvm_phase phase);
     super.run_phase(phase);
     `uvm_info("DRIVER_CLASS", "Inside Run Phase!", UVM_HIGH)
-    
+item = fifo_sequence_item::type_id::create("item");  
+ drive_reset(item);  
     forever begin
-      item = fifo_sequence_item::type_id::create("item"); 
+     // item = fifo_sequence_item::type_id::create("item"); 
       seq_item_port.get_next_item(item);
+fork
       drive_write(item);
-      //drive_read(item);
-      seq_item_port.item_done();
+	drive_read(item);
+join_any    
+  seq_item_port.item_done();
     end
     
   endtask: run_phase
@@ -175,14 +241,14 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
   //--------------------------------------------------------
   //[Method] Drive
   //--------------------------------------------------------
-  task drive_reset(fifo_sequence_item item);
+  virtual task drive_reset(fifo_sequence_item item);
         vif.wdata <= 0;
         vif.rdata <= 0;
         vif.winc <= 0;
         vif.rinc <= 0;
         vif.wrst_n <= 0;
         vif.rrst_n <= 0; 
-        #100;
+        #10;
         vif.wrst_n <= 1;
         vif.rrst_n <= 1;
         vif.winc <= 1;   
@@ -190,7 +256,9 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
   endtask: drive_reset
   
   task drive_write(fifo_sequence_item item);
-    forever begin
+    //forever begin
+        //vif.wrst_n <= 1;
+        //vif.rrst_n <= 1;
     @(posedge vif.wclk) begin
 	if (!vif.wfull) begin
 		if (write_count == WRITE_PERIOD) begin
@@ -209,11 +277,11 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
                     end
                 end
                 end
-	end
-  endtask: drive_write
+	//end
+endtask: drive_write
 
-  task drive_read(fifo_sequence_item item);
-    forever begin
+task drive_read(fifo_sequence_item item);
+
     @(posedge vif.rclk) begin
 	if (vif.rempty) begin
 		read_count <= 0;
@@ -228,14 +296,17 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
 		vif.rinc <= 0;
 	end
         end
-	end
+	//end
   endtask: drive_read
 
 endclass: fifo_driver
 
 
-class fifo_monitor extends uvm_monitor;
-  `uvm_component_utils(fifo_monitor)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+class fifo_write_monitor extends uvm_monitor;
+  `uvm_component_utils(fifo_write_monitor)
   
   virtual uvm_interface vif;
   fifo_sequence_item item;
@@ -246,7 +317,80 @@ class fifo_monitor extends uvm_monitor;
   //--------------------------------------------------------
   //Constructor
   //--------------------------------------------------------
-  function new(string name = "fifo_monitor", uvm_component parent);
+  function new(string name = "fifo_write_monitor", uvm_component parent);
+    super.new(name, parent);
+    `uvm_info("MONITOR_CLASS", "Inside Write Monitor Constructor!", UVM_HIGH)
+  endfunction: new
+  
+  
+  //--------------------------------------------------------
+  //Build Phase
+  //--------------------------------------------------------
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    `uvm_info("MONITOR_CLASS", "Build Phase Write Monitor !", UVM_HIGH)
+    
+    monitor_port = new("monitor_port", this);
+    
+    if(!(uvm_config_db #(virtual uvm_interface)::get(this, "*", "vif", vif))) begin
+      `uvm_error("MONITOR_CLASS", "Failed to get VIF from config DB!")
+    end
+    
+  endfunction: build_phase
+  
+  //--------------------------------------------------------
+  //Connect Phase
+  //--------------------------------------------------------
+  function void connect_phase(uvm_phase phase);
+    super.connect_phase(phase);
+    `uvm_info("MONITOR_CLASS", "Connect Phase!", UVM_HIGH)
+    
+  endfunction: connect_phase
+  
+  
+  //--------------------------------------------------------
+  //Run Phase
+  //--------------------------------------------------------
+  task run_phase (uvm_phase phase);
+    super.run_phase(phase);
+    `uvm_info("MONITOR_CLASS", "Inside Run Phase!", UVM_HIGH)
+    
+    forever begin
+      item = fifo_sequence_item::type_id::create("item");
+	@(posedge vif.wclk) begin
+      wait(vif.winc);
+	item.wdata = vif.wdata;
+      item.winc = vif.winc;
+      item.wptr2 = vif.wptr2;
+      item.wrst_n = vif.wrst_n;
+      item.wfull = vif.wfull;
+monitor_port.write(item);
+end
+
+    end
+        
+  endtask: run_phase
+  
+endclass: fifo_write_monitor
+
+
+
+
+
+
+class fifo_read_monitor extends uvm_monitor;
+  `uvm_component_utils(fifo_read_monitor)
+  
+  virtual uvm_interface vif;
+  fifo_sequence_item item;
+  
+  uvm_analysis_port #(fifo_sequence_item) monitor_port;
+  
+  
+  //--------------------------------------------------------
+  //Constructor
+  //--------------------------------------------------------
+  function new(string name = "fifo_read_monitor", uvm_component parent);
     super.new(name, parent);
     `uvm_info("MONITOR_CLASS", "Inside Constructor!", UVM_HIGH)
   endfunction: new
@@ -286,43 +430,42 @@ class fifo_monitor extends uvm_monitor;
     
     forever begin
       item = fifo_sequence_item::type_id::create("item");
-      
-      //sample inputs
-      @(posedge vif.wclk) begin
-      item.wdata = vif.wdata;
-      item.winc = vif.winc;
-      item.wptr2 = vif.wptr2;
-      end
-      //sample output
       @(posedge vif.rclk) begin
+	wait(vif.rinc);
       item.rdata = vif.rdata;
       item.rinc = vif.rinc;  
       item.rptr2 = vif.rptr2;
-      item.wfull = vif.wfull;
+      item.wrst_n = vif.wrst_n;
       item.rempty = vif.rempty;    
       // send item to scoreboard
-      monitor_port.write(item);
-	end
+ monitor_port.write(item);
+end
+
+
     end
         
   endtask: run_phase
   
-endclass: fifo_monitor
+endclass: fifo_read_monitor
 
 
 
-class fifo_agent extends uvm_agent;
-  `uvm_component_utils(fifo_agent)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+class fifo_write_agent extends uvm_agent;
+  `uvm_component_utils(fifo_write_agent)
   
-  fifo_driver drv;
-  fifo_monitor mon;
-  fifo_sequencer seqr;
-  
+  fifo_driver wdrv;
+  fifo_write_monitor wmon;
+  fifo_sequencer wseqr;
+  //uvm_analysis_export#(fifo_sequence_item) wexport;
     
   //--------------------------------------------------------
   //Constructor
   //--------------------------------------------------------
-  function new(string name = "fifo_agent", uvm_component parent);
+  function new(string name = "fifo_write_agent", uvm_component parent);
     super.new(name, parent);
     `uvm_info("AGENT_CLASS", "Inside Constructor!", UVM_HIGH)
   endfunction: new
@@ -335,9 +478,9 @@ class fifo_agent extends uvm_agent;
     super.build_phase(phase);
     `uvm_info("AGENT_CLASS", "Build Phase!", UVM_HIGH)
     
-    drv = fifo_driver::type_id::create("drv", this);
-    mon = fifo_monitor::type_id::create("mon", this);
-    seqr = fifo_sequencer::type_id::create("seqr", this);
+    wdrv = fifo_driver::type_id::create("wdrv", this);
+    wmon = fifo_write_monitor::type_id::create("wmon", this);
+    wseqr = fifo_sequencer::type_id::create("wseqr", this);
     
   endfunction: build_phase
   
@@ -349,7 +492,63 @@ class fifo_agent extends uvm_agent;
     super.connect_phase(phase);
     `uvm_info("AGENT_CLASS", "Connect Phase!", UVM_HIGH)
     
-    drv.seq_item_port.connect(seqr.seq_item_export);
+    wdrv.seq_item_port.connect(wseqr.seq_item_export);
+   // wmon.monitor_port.connect(this.wexport);
+  endfunction: connect_phase
+  
+  
+  //--------------------------------------------------------
+  //Run Phase
+  //--------------------------------------------------------
+  task run_phase (uvm_phase phase);
+    super.run_phase(phase);
+    
+  endtask: run_phase
+  
+endclass: fifo_write_agent
+
+
+class fifo_read_agent extends uvm_agent;
+  `uvm_component_utils(fifo_read_agent)
+  
+  fifo_driver rdrv;
+  fifo_read_monitor rmon;
+  fifo_sequencer rseqr;
+  
+	//uvm_analysis_export#(fifo_sequence_item) rexport;
+    
+  //--------------------------------------------------------
+  //Constructor
+  //--------------------------------------------------------
+  function new(string name = "fifo_read_agent", uvm_component parent);
+    super.new(name, parent);
+    `uvm_info("AGENT_CLASS", "Inside Constructor!", UVM_HIGH)
+  endfunction: new
+  
+  
+  //--------------------------------------------------------
+  //Build Phase
+  //--------------------------------------------------------
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    `uvm_info("AGENT_CLASS", "Build Phase!", UVM_HIGH)
+    
+    rdrv = fifo_driver::type_id::create("rdrv", this);
+    rmon = fifo_read_monitor::type_id::create("rmon", this);
+    rseqr = fifo_sequencer::type_id::create("rseqr", this);
+    
+  endfunction: build_phase
+  
+  
+  //--------------------------------------------------------
+  //Connect Phase
+  //--------------------------------------------------------
+  function void connect_phase(uvm_phase phase);
+    super.connect_phase(phase);
+    `uvm_info("AGENT_CLASS", "Connect Phase!", UVM_HIGH)
+    
+    rdrv.seq_item_port.connect(rseqr.seq_item_export);
+    //rmon.monitor_port.connect(this.rexport);
     
   endfunction: connect_phase
   
@@ -362,7 +561,9 @@ class fifo_agent extends uvm_agent;
     
   endtask: run_phase
   
-endclass: fifo_agent
+endclass: fifo_read_agent
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -445,11 +646,14 @@ class fifo_scoreboard extends uvm_test;
   task compare(fifo_sequence_item curr_trans);
     logic [8:0] expected;
     logic [8:0] actual;
-    
-forever begin
+expected = curr_trans.rdata;
+actual = mem[curr_trans.rptr2];   
+//forever begin
 if (curr_trans.rinc) begin
-	if(mem[curr_trans.rptr2] != curr_trans.rdata)    
-    if(actual != expected) begin
+	//if(mem[curr_trans.rptr2] != curr_trans.rdata)    
+    
+
+if(actual != expected) begin
       `uvm_error("COMPARE", $sformatf("Transaction failed! ACT=%d, EXP=%d", actual, expected))
     end
     else begin
@@ -457,15 +661,23 @@ if (curr_trans.rinc) begin
       `uvm_info("COMPARE", $sformatf("Transaction Passed! ACT=%d, EXP=%d", actual, expected), UVM_LOW)
     end
     end
-end
+//end
   endtask: compare
   
 endclass: fifo_scoreboard
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 class fifo_environment extends uvm_env;
   `uvm_component_utils(fifo_environment)
   
-  fifo_agent agnt;
+  fifo_write_agent wagnt;
+  fifo_read_agent ragnt;
   fifo_scoreboard scb;
   
   
@@ -485,7 +697,8 @@ class fifo_environment extends uvm_env;
     super.build_phase(phase);
     `uvm_info("ENV_CLASS", "Build Phase!", UVM_HIGH)
     
-    agnt = fifo_agent::type_id::create("agnt", this);
+    wagnt = fifo_write_agent::type_id::create("wagnt", this);
+    ragnt = fifo_read_agent::type_id::create("ragnt", this);
     scb = fifo_scoreboard::type_id::create("scb", this);
     
   endfunction: build_phase
@@ -498,29 +711,22 @@ class fifo_environment extends uvm_env;
     super.connect_phase(phase);
     `uvm_info("ENV_CLASS", "Connect Phase!", UVM_HIGH)
     
-    agnt.mon.monitor_port.connect(scb.scoreboard_port);
-    
+    wagnt.wmon.monitor_port.connect(scb.scoreboard_port);
+    ragnt.rmon.monitor_port.connect(scb.scoreboard_port);   
   endfunction: connect_phase
-  
-  
-  //--------------------------------------------------------
-  //Run Phase
-  //--------------------------------------------------------
-  task run_phase (uvm_phase phase);
-    super.run_phase(phase);
-    
-  endtask: run_phase
   
 endclass: fifo_environment
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 class fifo_test extends uvm_test;
   `uvm_component_utils(fifo_test)
 
   fifo_environment env;
   fifo_sequence reset_seq;
-  fifo_test_sequence test_seq;
-
+  fifo_write_sequence wtest_seq;
+  fifo_read_sequence rtest_seq;
   
   //--------------------------------------------------------
   //Constructor
@@ -539,7 +745,8 @@ class fifo_test extends uvm_test;
     `uvm_info("TEST_CLASS", "Build Phase!", UVM_HIGH)
 
     env = fifo_environment::type_id::create("env", this);
-
+      wtest_seq = fifo_write_sequence::type_id::create("wtest_seq");
+	rtest_seq = fifo_read_sequence::type_id::create("rtest_seq");
   endfunction: build_phase
 
   
@@ -564,14 +771,17 @@ class fifo_test extends uvm_test;
 
     //reset_seq
     reset_seq = fifo_sequence::type_id::create("reset_seq");
-    reset_seq.start(env.agnt.seqr);
-    #1;
+    reset_seq.start(env.wagnt.wseqr);
+    reset_seq.start(env.ragnt.rseqr);
+    //#10;
 
-    repeat(100) begin
+    repeat(15) begin
       //test_seq
-      test_seq = fifo_test_sequence::type_id::create("test_seq");
-      test_seq.start(env.agnt.seqr);
-      #10;
+	fork
+      wtest_seq.start(env.wagnt.wseqr);
+	rtest_seq.start(env.ragnt.rseqr);
+      //#10;
+join
     end
     
     phase.drop_objection(this);
