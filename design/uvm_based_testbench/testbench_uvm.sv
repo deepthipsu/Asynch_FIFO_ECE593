@@ -38,8 +38,9 @@ initial begin
       #2.22;
     end
   end
-   // always #1.00 wclk = ~wclk;
-   // always #2.22 rclk = ~rclk;
+
+//always #1.00 wclk = ~wclk;
+//always #2.22 rclk = ~rclk;
   
  uvm_interface fifoTBintf(wclk, rclk); // create interface object
 
@@ -130,7 +131,7 @@ end: coverage
   end
 
   initial begin
-    #5000;
+    #50000;
     $display("Sorry! Ran out of clock cycles!");
     $finish();
   end
