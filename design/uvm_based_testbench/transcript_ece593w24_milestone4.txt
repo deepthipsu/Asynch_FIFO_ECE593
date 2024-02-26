@@ -1,0 +1,234 @@
+# Compile of testbench_uvm.sv was successful.
+# Compile of definitions.sv was successful.
+# Compile of asynchFIFO.sv was successful.
+# Compile of interface_uvm.sv was successful.
+# Compile of fifo_sequence_item.sv was successful.
+# Compile of testbench_uvm.sv was successful.
+# 5 compiles, 0 failed with no errors.
+vsim -voptargs=+acc +UVM_VERBOSITY=UVM_HIGH work.tb_fifo_uvm
+# End time: 16:26:09 on Feb 25,2024, Elapsed time: 0:02:23
+# Errors: 0, Warnings: 3
+# vsim -voptargs="+acc" "+UVM_VERBOSITY=UVM_HIGH" work.tb_fifo_uvm 
+# Start time: 16:26:09 on Feb 25,2024
+# ** Note: (vsim-8009) Loading existing optimized design _opt12
+# Loading sv_std.std
+# Loading work.definitions(fast)
+# Loading work.uvm_interface(fast)
+# Loading mtiUvm.uvm_pkg(fast)
+# Loading work.testbench_uvm_sv_unit(fast)
+# Loading mtiUvm.questa_uvm_pkg(fast)
+# Loading work.tb_fifo_uvm(fast)
+# Loading work.uvm_interface(fast__2)
+# Loading work.asynchFIFO_sv_unit(fast)
+# Loading work.fifo(fast)
+# Loading work.fifomem(fast)
+# Loading work.sync_r2w(fast)
+# Loading work.sync_w2r(fast)
+# Loading work.rptr_empty(fast)
+# Loading work.wptr_full(fast)
+# Loading C:/questasim64_2023.3/uvm-1.1d\win64\uvm_dpi.dll
+run -all
+# ----------------------------------------------------------------
+# UVM-1.1d
+# (C) 2007-2013 Mentor Graphics Corporation
+# (C) 2007-2013 Cadence Design Systems, Inc.
+# (C) 2006-2013 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(278) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
+# UVM_INFO fifo_sequence_item.sv(736) @ 0: uvm_test_top [TEST_CLASS] Inside Constructor!
+# UVM_INFO @ 0: reporter [RNTST] Running test fifo_test...
+# UVM_INFO fifo_sequence_item.sv(745) @ 0: uvm_test_top [TEST_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(689) @ 0: uvm_test_top.env [ENV_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(96) @ 0: reporter@@fifo_write_sequence [BASE_SEQ] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(123) @ 0: reporter@@fifo_write_sequence [TEST_SEQ] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(96) @ 0: reporter@@fifo_read_sequence [BASE_SEQ] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(154) @ 0: reporter@@fifo_read_sequence [TEST_SEQ] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(698) @ 0: uvm_test_top.env [ENV_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(470) @ 0: uvm_test_top.env.wagnt [AGENT_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(525) @ 0: uvm_test_top.env.ragnt [AGENT_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(583) @ 0: uvm_test_top.env.scb [SCB_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(534) @ 0: uvm_test_top.env.ragnt [AGENT_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(192) @ 0: uvm_test_top.env.ragnt.rdrv [DRIVER_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(395) @ 0: uvm_test_top.env.ragnt.rmon [MONITOR_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(59) @ 0: uvm_test_top.env.ragnt.rseqr [SEQR_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(201) @ 0: uvm_test_top.env.ragnt.rdrv [DRIVER_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(404) @ 0: uvm_test_top.env.ragnt.rmon [MONITOR_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(68) @ 0: uvm_test_top.env.ragnt.rseqr [SEQR_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(592) @ 0: uvm_test_top.env.scb [SCB_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(479) @ 0: uvm_test_top.env.wagnt [AGENT_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(192) @ 0: uvm_test_top.env.wagnt.wdrv [DRIVER_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(322) @ 0: uvm_test_top.env.wagnt.wmon [MONITOR_CLASS] Inside Write Monitor Constructor!
+# UVM_INFO fifo_sequence_item.sv(59) @ 0: uvm_test_top.env.wagnt.wseqr [SEQR_CLASS] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(201) @ 0: uvm_test_top.env.wagnt.wdrv [DRIVER_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(331) @ 0: uvm_test_top.env.wagnt.wmon [MONITOR_CLASS] Build Phase Write Monitor !
+# UVM_INFO fifo_sequence_item.sv(68) @ 0: uvm_test_top.env.wagnt.wseqr [SEQR_CLASS] Build Phase!
+# UVM_INFO fifo_sequence_item.sv(215) @ 0: uvm_test_top.env.ragnt.rdrv [DRIVER_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(419) @ 0: uvm_test_top.env.ragnt.rmon [MONITOR_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(78) @ 0: uvm_test_top.env.ragnt.rseqr [SEQR_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(548) @ 0: uvm_test_top.env.ragnt [AGENT_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(604) @ 0: uvm_test_top.env.scb [SCB_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(215) @ 0: uvm_test_top.env.wagnt.wdrv [DRIVER_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(346) @ 0: uvm_test_top.env.wagnt.wmon [MONITOR_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(78) @ 0: uvm_test_top.env.wagnt.wseqr [SEQR_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(493) @ 0: uvm_test_top.env.wagnt [AGENT_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(712) @ 0: uvm_test_top.env [ENV_CLASS] Connect Phase!
+# UVM_INFO fifo_sequence_item.sv(758) @ 0: uvm_test_top [TEST_CLASS] Connect Phase!
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(339) @ 0: reporter [Questa UVM] End Of Elaboration
+# UVM_INFO fifo_sequence_item.sv(768) @ 0: uvm_test_top [TEST_CLASS] Run Phase!
+# UVM_INFO fifo_sequence_item.sv(96) @ 0: reporter@@fifo_sequence [BASE_SEQ] Inside Constructor!
+# UVM_INFO fifo_sequence_item.sv(356) @ 0: uvm_test_top.env.wagnt.wmon [MONITOR_CLASS] Inside Run Phase!
+# UVM_INFO fifo_sequence_item.sv(225) @ 0: uvm_test_top.env.wagnt.wdrv [DRIVER_CLASS] Inside Run Phase!
+# UVM_INFO fifo_sequence_item.sv(624) @ 0: uvm_test_top.env.scb [SCB_CLASS] Run Phase!
+# UVM_INFO fifo_sequence_item.sv(429) @ 0: uvm_test_top.env.ragnt.rmon [MONITOR_CLASS] Inside Run Phase!
+# UVM_INFO fifo_sequence_item.sv(225) @ 0: uvm_test_top.env.ragnt.rdrv [DRIVER_CLASS] Inside Run Phase!
+# UVM_INFO fifo_sequence_item.sv(100) @ 0: reporter@@fifo_sequence [BASE_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 100: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=  0, EXP=  x
+# UVM_INFO fifo_sequence_item.sv(100) @ 120: reporter@@fifo_sequence [BASE_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 132: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=  0, EXP=  0
+# UVM_INFO fifo_sequence_item.sv(131) @ 132: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 132: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 176: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=  0, EXP=  0
+# UVM_INFO fifo_sequence_item.sv(661) @ 220: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=  0, EXP=  0
+# UVM_INFO fifo_sequence_item.sv(661) @ 264: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=  0, EXP=  0
+# UVM_ERROR fifo_sequence_item.sv(657) @ 308: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=191, EXP=  0
+# UVM_INFO fifo_sequence_item.sv(661) @ 352: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=191, EXP=191
+# UVM_INFO fifo_sequence_item.sv(131) @ 352: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 352: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 396: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=143, EXP=191
+# UVM_INFO fifo_sequence_item.sv(661) @ 440: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=143, EXP=143
+# UVM_ERROR fifo_sequence_item.sv(657) @ 484: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=465, EXP=143
+# UVM_INFO fifo_sequence_item.sv(661) @ 528: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=465, EXP=465
+# UVM_ERROR fifo_sequence_item.sv(657) @ 572: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=400, EXP=465
+# UVM_INFO fifo_sequence_item.sv(131) @ 572: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 572: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 616: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=400, EXP=400
+# UVM_ERROR fifo_sequence_item.sv(657) @ 660: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=469, EXP=400
+# UVM_INFO fifo_sequence_item.sv(661) @ 704: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=469, EXP=469
+# UVM_ERROR fifo_sequence_item.sv(657) @ 748: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=416, EXP=469
+# UVM_INFO fifo_sequence_item.sv(661) @ 792: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=416, EXP=416
+# UVM_INFO fifo_sequence_item.sv(131) @ 792: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 792: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 836: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=218, EXP=416
+# UVM_INFO fifo_sequence_item.sv(661) @ 880: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=218, EXP=218
+# UVM_ERROR fifo_sequence_item.sv(657) @ 924: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=349, EXP=218
+# UVM_INFO fifo_sequence_item.sv(661) @ 968: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=349, EXP=349
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1012: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 22, EXP=349
+# UVM_INFO fifo_sequence_item.sv(131) @ 1012: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 1012: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 1056: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 22, EXP= 22
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1100: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 81, EXP= 22
+# UVM_INFO fifo_sequence_item.sv(661) @ 1144: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 81, EXP= 81
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1188: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=177, EXP= 81
+# UVM_INFO fifo_sequence_item.sv(661) @ 1232: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=177, EXP=177
+# UVM_INFO fifo_sequence_item.sv(131) @ 1232: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 1232: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1276: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=236, EXP=177
+# UVM_INFO fifo_sequence_item.sv(661) @ 1320: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=236, EXP=236
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1364: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 47, EXP=236
+# UVM_INFO fifo_sequence_item.sv(661) @ 1408: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 47, EXP= 47
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1452: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=270, EXP= 47
+# UVM_INFO fifo_sequence_item.sv(131) @ 1452: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 1452: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 1496: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=270, EXP=270
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1540: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=441, EXP=270
+# UVM_INFO fifo_sequence_item.sv(661) @ 1584: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=441, EXP=441
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1628: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=389, EXP=441
+# UVM_INFO fifo_sequence_item.sv(661) @ 1672: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=389, EXP=389
+# UVM_INFO fifo_sequence_item.sv(131) @ 1672: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 1672: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1716: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 27, EXP=389
+# UVM_INFO fifo_sequence_item.sv(661) @ 1760: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 27, EXP= 27
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1804: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=361, EXP= 27
+# UVM_INFO fifo_sequence_item.sv(661) @ 1848: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=361, EXP=361
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1892: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=446, EXP=361
+# UVM_INFO fifo_sequence_item.sv(131) @ 1892: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 1892: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 1936: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=446, EXP=446
+# UVM_ERROR fifo_sequence_item.sv(657) @ 1980: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=496, EXP=446
+# UVM_INFO fifo_sequence_item.sv(661) @ 2024: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=496, EXP=496
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2068: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=104, EXP=496
+# UVM_INFO fifo_sequence_item.sv(661) @ 2112: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=104, EXP=104
+# UVM_INFO fifo_sequence_item.sv(131) @ 2112: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 2112: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2156: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=264, EXP=104
+# UVM_INFO fifo_sequence_item.sv(661) @ 2200: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=264, EXP=264
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2244: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=178, EXP=264
+# UVM_INFO fifo_sequence_item.sv(661) @ 2288: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=178, EXP=178
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2332: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=224, EXP=178
+# UVM_INFO fifo_sequence_item.sv(131) @ 2332: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 2332: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 2376: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=224, EXP=224
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2420: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 59, EXP=224
+# UVM_INFO fifo_sequence_item.sv(661) @ 2464: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 59, EXP= 59
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2508: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=504, EXP= 59
+# UVM_INFO fifo_sequence_item.sv(661) @ 2552: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=504, EXP=504
+# UVM_INFO fifo_sequence_item.sv(131) @ 2552: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 2552: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2596: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=290, EXP=504
+# UVM_INFO fifo_sequence_item.sv(661) @ 2640: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=290, EXP=290
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2684: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 39, EXP=290
+# UVM_INFO fifo_sequence_item.sv(661) @ 2728: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 39, EXP= 39
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2772: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=131, EXP= 39
+# UVM_INFO fifo_sequence_item.sv(131) @ 2772: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 2772: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 2816: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=131, EXP=131
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2860: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 88, EXP=131
+# UVM_INFO fifo_sequence_item.sv(661) @ 2904: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 88, EXP= 88
+# UVM_ERROR fifo_sequence_item.sv(657) @ 2948: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=263, EXP= 88
+# UVM_INFO fifo_sequence_item.sv(661) @ 2992: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=263, EXP=263
+# UVM_INFO fifo_sequence_item.sv(131) @ 2992: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 2992: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_ERROR fifo_sequence_item.sv(657) @ 3036: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=496, EXP=263
+# UVM_INFO fifo_sequence_item.sv(661) @ 3080: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=496, EXP=496
+# UVM_ERROR fifo_sequence_item.sv(657) @ 3124: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT= 55, EXP=496
+# UVM_INFO fifo_sequence_item.sv(661) @ 3168: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT= 55, EXP= 55
+# UVM_ERROR fifo_sequence_item.sv(657) @ 3212: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=237, EXP= 55
+# UVM_INFO fifo_sequence_item.sv(131) @ 3212: reporter@@fifo_write_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(162) @ 3212: reporter@@fifo_read_sequence [TEST_SEQ] Inside body task!
+# UVM_INFO fifo_sequence_item.sv(661) @ 3256: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=237, EXP=237
+# UVM_ERROR fifo_sequence_item.sv(657) @ 3300: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=428, EXP=237
+# UVM_INFO fifo_sequence_item.sv(661) @ 3344: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=428, EXP=428
+# UVM_ERROR fifo_sequence_item.sv(657) @ 3388: uvm_test_top.env.scb [COMPARE] Transaction failed! ACT=222, EXP=428
+# UVM_INFO fifo_sequence_item.sv(661) @ 3432: uvm_test_top.env.scb [COMPARE] Transaction Passed! ACT=222, EXP=222
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 3432: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :  122
+# UVM_WARNING :    0
+# UVM_ERROR :   36
+# UVM_FATAL :    0
+# ** Report counts by id
+# [AGENT_CLASS]     6
+# [BASE_SEQ]     5
+# [COMPARE]    77
+# [DRIVER_CLASS]     8
+# [ENV_CLASS]     3
+# [MONITOR_CLASS]     8
+# [Questa UVM]     3
+# [RNTST]     1
+# [SCB_CLASS]     4
+# [SEQR_CLASS]     6
+# [TEST_CLASS]     4
+# [TEST_DONE]     1
+# [TEST_SEQ]    32
+# ** Note: $finish    : C:/questasim64_2023.3/win64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 343200 ps  Iteration: 61  Instance: /tb_fifo_uvm
+# 1
+# Break in Task uvm_pkg/uvm_root::run_test at C:/questasim64_2023.3/win64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh line 430
