@@ -16,7 +16,7 @@ class scoreboard;
   mailbox mon2scb;
   
   //used to count the number of transactions
-  int no_transactions;
+  int no_transactions = 0;
   
   //constructor
   function new(mailbox mon2scb);
@@ -28,14 +28,17 @@ class scoreboard;
   task main;
   transaction trans;
     forever begin
-no_transactions++;
       mon2scb.get(trans);
-      if(trans.rinc) begin
-        if(mem[trans.rptr2] !== trans.rdata)
+      if(trans.rinc && trans.rptr2 != 0) begin
+        if(mem[trans.rptr2] !== trans.rdata) begin
           $error("Wrong Result.\n\tExpected: %0d Actual: %0d",(trans.rdata),mem[trans.rptr2]);
-        else
+	no_transactions++;
+	end
+        else begin
           $display("Result is as Expected: %0d Actual: %0d       Time: %0t",(trans.rdata),mem[trans.rptr2], $time);
       //trans.display("[ Scoreboard ]");
+	no_transactions++;
+	end
          end
 
 $display("---scoreboard transactions = %0d", no_transactions);
