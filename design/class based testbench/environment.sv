@@ -52,9 +52,9 @@ class environment;
   
   task test();
     fork 
-  $display("[ ENVIRONMENT -------- Task Test before gen.main call -----");
+  //$display("[ ENVIRONMENT -------- Task Test before gen.main call -----");
     gen.main();
-  $display("[ ENVIRONMENT -------- Task Test before driv.main call -----");
+  //$display("[ ENVIRONMENT -------- Task Test before driv.main call -----");
     driv.main();
     driv.main1();
     mon.main();
@@ -62,21 +62,33 @@ class environment;
     join_any
   endtask
   
+  task test_reset();
+    fork 
+  //$display("[ ENVIRONMENT -------- Task Test before gen.main call -----");
+    gen.main();
+  //$display("[ ENVIRONMENT -------- Task Test before driv.main call -----");
+    driv.main();
+    //driv.main1();
+	// driv.reset();
+    mon.main();
+    scb.main();
+    join_any
+  endtask
+
   task post_test();
     wait(gen.ended.triggered);
-    wait(gen.repeat_count == driv.no_transactions);
-    //wait(gen.repeat_count == scb.no_transactions);
-
-#30000;
+    //wait(gen.repeat_count == driv.no_transactions);
+    wait(gen.repeat_count == scb.no_transactions);
+//#3000;
   endtask  
   
   //run task
   task run;
     pre_test();
     test();
+    //test_reset();
     post_test();
     $finish;
   endtask
   
 endclass
-
