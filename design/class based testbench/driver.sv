@@ -10,7 +10,7 @@
 import definitions::*;
 
 class driver;
-    int no_transactions;
+    int no_transactions = 0;
 
     logic [1:0] write_count = 0; // write idle cyle is 2
     logic [1:0] read_count = 0; // read idle cycle is 1
@@ -34,7 +34,7 @@ class driver;
         vif.rinc <= 0;
         vif.wrst_n <= 0;
         vif.rrst_n <= 0; 
-        #100;
+        #10;
         vif.wrst_n <= 1;
         vif.rrst_n <= 1;
         vif.winc <= 1;   
@@ -44,21 +44,24 @@ class driver;
     endtask
 
     task main;
-        $display("[ DRIVER ] ----- in main  -----");
+    //    $display("[ DRIVER ] ----- in main  -----");
         forever begin
+//gen2driv.get(trans);
             @( posedge vif.wclk) begin
                 //if (vif.winc && !vif.wfull) begin
+vif.winc <= 1;
                 if (!vif.wfull) begin
                     if (write_count == WRITE_PERIOD) begin
                         gen2driv.get(trans);
                         vif.wdata <= trans.wdata;
                         vif.winc <= 1;
                         write_count <= 0;
-                        no_transactions++;
-                        burst_count <= burst_count +1;
+                       // no_transactions = no_transactions +1;
+                        burst_count = burst_count +1;
                         $display("---burst count = %0d", burst_count);
-                        $display("---transactions = %0d", no_transactions);
+                       // $display("---transactions = %0d", no_transactions);
                             if (burst_count == BURST_LENGTH -1) begin
+				$display("Maximum burst count of reached %0d", burst_count);
                                 burst_count <= 0;
                             end 
                     end
@@ -72,12 +75,12 @@ class driver;
     endtask
 
     task main1;
-    $display("[ DRIVER ] ----- in main1  -----");
+   // $display("[ DRIVER ] ----- in main1  -----");
         forever begin
             @( posedge vif.rclk) begin
                 if (vif.rempty) begin
                     read_count <= 0;
-                    vif.rinc =1;
+                    //vif.rinc =1;
                 end
                 else if (read_count == READ_PERIOD) begin
                     vif.rinc =1;
