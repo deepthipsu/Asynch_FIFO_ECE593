@@ -215,7 +215,8 @@ class sequential_write_read_sequence extends fifo_sequence;
   endtask
 endclass: sequential_write_read_sequence
 
-//simultaneous write and read Sequenceclass simultaneous_write_read_sequence extends fifo_sequence;
+//simultaneous write and read Sequence
+class simultaneous_write_read_sequence extends fifo_sequence;
   task body();
     `uvm_info("SEQ", "Starting Simultaneous Write and Read Sequence", UVM_HIGH)
     repeat(repeat_counts) begin
@@ -227,7 +228,8 @@ endclass: sequential_write_read_sequence
   endtask
 endclass: simultaneous_write_read_sequence
 
-//write full Sequenceclass write_full_sequence extends fifo_write_sequence;
+//write full Sequence
+class write_full_sequence extends fifo_write_sequence;
   task body();
     `uvm_info("SEQ", "Starting Write-Full Sequence", UVM_HIGH)
     // Fill the FIFO to capacity
