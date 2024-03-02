@@ -256,9 +256,6 @@ join_any
   endtask: drive_reset
   
   task drive_write(fifo_sequence_item item);
-    //forever begin
-        //vif.wrst_n <= 1;
-        //vif.rrst_n <= 1;
     @(posedge vif.wclk) begin
 	if (!vif.wfull) begin
 		if (write_count == WRITE_PERIOD) begin
@@ -283,11 +280,11 @@ endtask: drive_write
 task drive_read(fifo_sequence_item item);
 
     @(posedge vif.rclk) begin
-	if (vif.rempty) begin
-		read_count <= 0;
-		vif.rinc = 1;
-	end
-	else if (read_count == READ_PERIOD ) begin
+	//if (vif.rempty) begin
+	//	read_count <= 0;
+		//vif.rinc = 1;
+	//end
+	if (read_count == READ_PERIOD ) begin
 		vif.rinc = 1;
 		read_count <= 0;
         end
@@ -646,14 +643,12 @@ class fifo_scoreboard extends uvm_test;
   task compare(fifo_sequence_item curr_trans);
     logic [8:0] expected;
     logic [8:0] actual;
-expected = curr_trans.rdata;
-actual = mem[curr_trans.rptr2];   
-//forever begin
+actual = curr_trans.rdata;
+expected = mem[curr_trans.rptr2];   
+
 if (curr_trans.rinc) begin
 	//if(mem[curr_trans.rptr2] != curr_trans.rdata)    
-    
-
-if(actual != expected) begin
+	if(actual != expected) begin
       `uvm_error("COMPARE", $sformatf("Transaction failed! ACT=%d, EXP=%d", actual, expected))
     end
     else begin
@@ -749,6 +744,28 @@ class fifo_test extends uvm_test;
 	rtest_seq = fifo_read_sequence::type_id::create("rtest_seq");
   endfunction: build_phase
 
+  //--------------------------------------------------------
+  //End of Elaboration Phase
+  //--------------------------------------------------------
+virtual function void end_of_elaboration_phase(uvm_phase phase);
+	super.end_of_elaboration_phase(phase);
+	uvm_top.print_topology();
+endfunction: end_of_elaboration_phase
+
+  //--------------------------------------------------------
+  //Report Phase
+  //--------------------------------------------------------
+virtual function void report_phase(uvm_phase phase);
+	uvm_report_server svr;
+	super.report_phase(phase);
+	svr = uvm_report_server::get_server();
+	if(svr.get_severity_count(UVM_FATAL) + svr.get_severity_count(UVM_ERROR) > 0) begin
+		`uvm_info(get_type_name(),"===============ECE593 TEST FAILED================",UVM_NONE)
+	end
+	else begin
+		`uvm_info(get_type_name(),"===============ECE593 TEST PASSED================",UVM_NONE)
+	end
+endfunction: report_phase
   
   //--------------------------------------------------------
   //Connect Phase
@@ -781,7 +798,7 @@ class fifo_test extends uvm_test;
       wtest_seq.start(env.wagnt.wseqr);
 	rtest_seq.start(env.ragnt.rseqr);
       //#10;
-join
+join_any
     end
     
     phase.drop_objection(this);
