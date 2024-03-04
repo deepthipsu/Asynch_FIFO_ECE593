@@ -24,7 +24,7 @@ class fifo_sequence_item extends uvm_sequence_item;
   rand logic winc, wrst_n;
   rand logic rinc, rrst_n;
   logic [ADDRSIZE :0] rptr2, wptr2;
-
+  rand int transactionID;
   `uvm_object_utils_begin(fifo_sequence_item)
     `uvm_field_int(rdata,UVM_ALL_ON)
     `uvm_field_int(wfull,UVM_ALL_ON)
@@ -36,6 +36,7 @@ class fifo_sequence_item extends uvm_sequence_item;
     `uvm_field_int(rptr2,UVM_ALL_ON)
     `uvm_field_int(wptr2,UVM_ALL_ON)
     `uvm_field_int(wdata,UVM_ALL_ON)
+   `uvm_field_int(transactionID,UVM_ALL_ON)
   `uvm_object_utils_end
 
 
@@ -111,7 +112,7 @@ endclass: fifo_sequence
 class fifo_write_sequence extends fifo_sequence;
   `uvm_object_utils(fifo_write_sequence)
   
-parameter repeat_counts = 10;
+//parameter repeat_counts = 10;
 
   fifo_sequence_item item;
   
@@ -129,6 +130,7 @@ parameter repeat_counts = 10;
   //--------------------------------------------------------
   task body();
     `uvm_info("TEST_SEQ", "Inside body task!", UVM_HIGH)
+
 repeat(repeat_counts) begin
     item = fifo_sequence_item::type_id::create("item");
     start_item(item);
@@ -136,6 +138,17 @@ repeat(repeat_counts) begin
     finish_item(item);
         end
 //#10;
+
+/*
+  for(int i = 1; i<=repeat_counts; i++) begin 
+  item = fifo_sequence_item::type_id::create("item");
+start_item(item);
+if (i <= repeat_counts) assert(item.randomize() with {item.transactionID == i;}) 
+      `uvm_info("GENERATOR", $sformatf("DATA =%d  TransactionID =%d", item.wdata, item.transactionID), UVM_LOW)
+    //assert(item.randomize() with {rinc == 1'b0;});
+    finish_item(item);
+  end
+*/
   endtask: body
   
 endclass: fifo_write_sequence
@@ -145,7 +158,7 @@ class fifo_read_sequence extends fifo_sequence;
   `uvm_object_utils(fifo_read_sequence)
   
   fifo_sequence_item item;
-  parameter repeat_counts = 10;
+ // parameter repeat_counts = 10;
   //--------------------------------------------------------
   //Constructor
   //--------------------------------------------------------
@@ -160,15 +173,134 @@ class fifo_read_sequence extends fifo_sequence;
   //--------------------------------------------------------
   task body();
     `uvm_info("TEST_SEQ", "Inside body task!", UVM_HIGH)
+
 repeat(repeat_counts) begin
     item = fifo_sequence_item::type_id::create("item");
     start_item(item);
     assert(item.randomize() with {winc == 1'b0;});
     finish_item(item);
         end
+
+/*
+  for(int i = 1; i<=repeat_counts; i++) begin 
+  item = fifo_sequence_item::type_id::create("item");
+start_item(item);
+if (i <= repeat_counts) assert(item.randomize() with {item.transactionID == i;}) 
+      `uvm_info("READS", $sformatf("DATA =%d  TransactionID =%d", item.wdata, item.transactionID), UVM_LOW)
+    //assert(item.randomize() with {rinc == 1'b0;});
+    finish_item(item);
+  end
+*/
+
   endtask: body
   
 endclass: fifo_read_sequence
+
+
+// Sequences for each test scenario
+// write only sequence
+class write_random_data_sequence extends fifo_write_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Write Sequence with Random Data", UVM_HIGH)
+    repeat(repeat_counts) begin
+      item = fifo_sequence_item::type_id::create("item");
+      start_item(item);
+      assert(item.randomize() with { rinc == 1'b0; });
+      finish_item(item);
+    end
+  endtask
+endclass: write_random_data_sequence
+
+
+//read only
+class read_empty_sequence extends fifo_read_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Read Sequence with Empty FIFO Handling", UVM_HIGH)
+    repeat(repeat_counts) begin
+      item = fifo_sequence_item::type_id::create("item");
+      start_item(item);
+      assert(item.randomize() with { winc == 1'b0; });
+      finish_item(item);
+    end
+  endtask
+endclass: read_empty_sequence
+
+
+
+//sequential write and read 
+class sequential_write_read_sequence extends fifo_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Sequential Write and Read Sequence", UVM_HIGH)
+    repeat(repeat_counts) begin
+      req = fifo_sequence_item::type_id::create("req");
+      start_item(req);
+      assert(req.randomize() with { rinc == 1'b0; });
+      finish_item(req);
+      // Delay before reading
+      #10;
+      req = fifo_sequence_item::type_id::create("req");
+      start_item(req);
+      assert(req.randomize() with { winc == 1'b0; });
+      finish_item(req);
+    end
+  endtask
+endclass: sequential_write_read_sequence
+
+//simultaneous write and read Sequence
+class simultaneous_write_read_sequence extends fifo_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Simultaneous Write and Read Sequence", UVM_HIGH)
+    repeat(repeat_counts) begin
+      req = fifo_sequence_item::type_id::create("req");
+      start_item(req);
+      assert(req.randomize() with { rinc == 1'b0; winc == 1'b0; });
+      finish_item(req);
+    end
+  endtask
+endclass: simultaneous_write_read_sequence
+
+//write full Sequence
+class write_full_sequence extends fifo_write_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Write-Full Sequence", UVM_HIGH)
+    // Fill the FIFO to capacity
+    repeat(DEPTH) begin  //FIFO_CAPACITY
+      item = fifo_sequence_item::type_id::create("item");
+      start_item(item);
+      assert(item.randomize() with { rinc == 1'b0; });
+      finish_item(item);
+    end
+    // Attempt to write to a full FIFO
+    item = fifo_sequence_item::type_id::create("item");
+    start_item(item);
+    assert(item.randomize() with { rinc == 1'b0; });
+    finish_item(item);
+  endtask
+endclass: write_full_sequence
+
+
+/*//read empty Sequence
+class read_empty_sequence extends fifo_read_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Read-Empty Sequence", UVM_HIGH)
+    // Attempt to read from an empty FIFO
+    item = fifo_sequence_item::type_id::create("item");
+    start_item(item);
+    assert(item.randomize() with { winc == 1'b0; });
+    finish_item(item);
+  endtask
+endclass: read_empty_sequence*/
+
+//reset condition
+class reset_behavior_sequence extends fifo_sequence;
+  task body();
+    `uvm_info("SEQ", "Starting Reset Behavior Sequence", UVM_HIGH)
+    // Assert reset signal
+    //assert(env.wagnt.wdrv.drive_reset(req) && env.ragnt.rdrv.drive_reset(req));
+    // Delay to allow reset to take effect
+    #10;
+  endtask
+endclass: reset_behavior_sequence
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -263,6 +395,7 @@ join_any
                         write_count <= 0;
                         //no_transactions++;
                         burst_count <= burst_count +1;
+ // `uvm_info("DRIVER", $sformatf("DATA =%d  TransactionID =%d", item.wdata, burst_count), UVM_LOW)
                             if (burst_count == BURST_LENGTH -1) begin
                                 burst_count <= 0;
                             end 
@@ -357,6 +490,7 @@ class fifo_write_monitor extends uvm_monitor;
       item.wptr2 = vif.wptr2;
       item.wrst_n = vif.wrst_n;
       item.wfull = vif.wfull;
+  `uvm_info("MONITOR", $sformatf("DATA =%d  TransactionID =%d", vif.wdata, burst_count), UVM_LOW)
 @(posedge vif.wclk)
 monitor_port.write(item);
 //end
@@ -431,6 +565,7 @@ class fifo_read_monitor extends uvm_monitor;
       item.rptr2 = vif.rptr2;
       item.wrst_n = vif.wrst_n;
       item.rempty = vif.rempty;    
+ // `uvm_info("MONITOR", $sformatf("DATA =%d  TransactionID =%d", vif.wdata, burst_count), UVM_LOW)
       // send item to scoreboard
 @(posedge vif.rclk) //begin
  monitor_port.write(item);
@@ -653,7 +788,7 @@ if( curr_trans.rinc) begin
     end
     else begin
       // Note: Can display the input and op_code as well if you want to see what's happening
-      `uvm_info("COMPARE", $sformatf("Transaction Passed! ACT=%d, EXP=%d", actual, expected), UVM_LOW)
+      `uvm_info("COMPARE", $sformatf("Transaction Passed! ACT=%d, EXP=%d,  TransactionID =%d", actual, expected, curr_trans.rptr2), UVM_LOW)
     end
     end
 //end
@@ -793,7 +928,7 @@ endfunction: report_phase
     //#10;
 //phase.raise_objection(this);
 
-    repeat(10) begin
+    repeat(repeat_counts) begin
       //test_seq
 	fork
       wtest_seq.start(env.wagnt.wseqr);
