@@ -111,7 +111,7 @@ endclass: fifo_sequence
 class fifo_write_sequence extends fifo_sequence;
   `uvm_object_utils(fifo_write_sequence)
   
-parameter repeat_counts = 15;
+parameter repeat_counts = 10;
 
   fifo_sequence_item item;
   
@@ -145,7 +145,7 @@ class fifo_read_sequence extends fifo_sequence;
   `uvm_object_utils(fifo_read_sequence)
   
   fifo_sequence_item item;
-  parameter repeat_counts = 15;
+  parameter repeat_counts = 10;
   //--------------------------------------------------------
   //Constructor
   //--------------------------------------------------------
@@ -180,9 +180,6 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
   
   virtual uvm_interface vif;
   fifo_sequence_item item;
-//    logic [1:0] write_count = 0; // write idle cyle is 2
-//    logic [1:0] read_count = 0; // read idle cycle is 1
-//    logic [10:0] burst_count = 0; // 2^10 = 1024 
   
   //--------------------------------------------------------
   //Constructor
@@ -223,15 +220,15 @@ class fifo_driver extends uvm_driver#(fifo_sequence_item);
   virtual task run_phase (uvm_phase phase);
     super.run_phase(phase);
     `uvm_info("DRIVER_CLASS", "Inside Run Phase!", UVM_HIGH)
-item = fifo_sequence_item::type_id::create("item");  
+//item = fifo_sequence_item::type_id::create("item");  
  drive_reset(item);  
     forever begin
-     // item = fifo_sequence_item::type_id::create("item"); 
+      item = fifo_sequence_item::type_id::create("item"); 
       seq_item_port.get_next_item(item);
 fork
       drive_write(item);
 	drive_read(item);
-join_any    
+join_any 
   seq_item_port.item_done();
     end
     
@@ -256,6 +253,8 @@ join_any
   endtask: drive_reset
   
   task drive_write(fifo_sequence_item item);
+	if (vif.wrst_n == 1) begin
+	//fork
     @(posedge vif.wclk) begin
 	if (!vif.wfull) begin
 		if (write_count == WRITE_PERIOD) begin
@@ -274,26 +273,23 @@ join_any
                     end
                 end
                 end
-	//end
+	//join
+	end
 endtask: drive_write
 
 task drive_read(fifo_sequence_item item);
-
+	if (vif.rrst_n == 1) begin
     @(posedge vif.rclk) begin
-	//if (vif.rempty) begin
-	//	read_count <= 0;
-		//vif.rinc = 1;
-	//end
 	if (read_count == READ_PERIOD ) begin
 		vif.rinc = 1;
 		read_count <= 0;
         end
         else begin
-		read_count <= read_count +1;
 		vif.rinc <= 0;
+		read_count <= read_count +1;
 	end
         end
-	//end
+	end
   endtask: drive_read
 
 endclass: fifo_driver
@@ -351,18 +347,19 @@ class fifo_write_monitor extends uvm_monitor;
   task run_phase (uvm_phase phase);
     super.run_phase(phase);
     `uvm_info("MONITOR_CLASS", "Inside Run Phase!", UVM_HIGH)
-    
+    item = fifo_sequence_item::type_id::create("item");
     forever begin
-      item = fifo_sequence_item::type_id::create("item");
-	@(posedge vif.wclk) begin
+      //item = fifo_sequence_item::type_id::create("item");
+	//@(posedge vif.wclk) begin
       wait(vif.winc);
-	item.wdata = vif.wdata;
+	//item.wdata = vif.wdata;
       item.winc = vif.winc;
       item.wptr2 = vif.wptr2;
       item.wrst_n = vif.wrst_n;
       item.wfull = vif.wfull;
+@(posedge vif.wclk)
 monitor_port.write(item);
-end
+//end
 
     end
         
@@ -424,21 +421,20 @@ class fifo_read_monitor extends uvm_monitor;
   task run_phase (uvm_phase phase);
     super.run_phase(phase);
     `uvm_info("MONITOR_CLASS", "Inside Run Phase!", UVM_HIGH)
-    
+    item = fifo_sequence_item::type_id::create("item");
     forever begin
-      item = fifo_sequence_item::type_id::create("item");
+      //item = fifo_sequence_item::type_id::create("item");
       @(posedge vif.rclk) begin
-	wait(vif.rinc);
+	//wait(vif.rinc);
       item.rdata = vif.rdata;
       item.rinc = vif.rinc;  
       item.rptr2 = vif.rptr2;
       item.wrst_n = vif.wrst_n;
       item.rempty = vif.rempty;    
       // send item to scoreboard
+@(posedge vif.rclk) //begin
  monitor_port.write(item);
 end
-
-
     end
         
   endtask: run_phase
@@ -457,7 +453,8 @@ class fifo_write_agent extends uvm_agent;
   fifo_driver wdrv;
   fifo_write_monitor wmon;
   fifo_sequencer wseqr;
-  //uvm_analysis_export#(fifo_sequence_item) wexport;
+  //uvm_analysis_port #(fifo_sequence_item) wexport;
+  virtual uvm_interface vif;
     
   //--------------------------------------------------------
   //Constructor
@@ -474,9 +471,11 @@ class fifo_write_agent extends uvm_agent;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     `uvm_info("AGENT_CLASS", "Build Phase!", UVM_HIGH)
-    
+    //wexport = new("wexport", this);
     wdrv = fifo_driver::type_id::create("wdrv", this);
+    wdrv.vif = vif;
     wmon = fifo_write_monitor::type_id::create("wmon", this);
+    wmon.vif = vif;
     wseqr = fifo_sequencer::type_id::create("wseqr", this);
     
   endfunction: build_phase
@@ -490,7 +489,7 @@ class fifo_write_agent extends uvm_agent;
     `uvm_info("AGENT_CLASS", "Connect Phase!", UVM_HIGH)
     
     wdrv.seq_item_port.connect(wseqr.seq_item_export);
-   // wmon.monitor_port.connect(this.wexport);
+    //wmon.wexport.connect(this.wexport);
   endfunction: connect_phase
   
   
@@ -511,8 +510,8 @@ class fifo_read_agent extends uvm_agent;
   fifo_driver rdrv;
   fifo_read_monitor rmon;
   fifo_sequencer rseqr;
-  
-	//uvm_analysis_export#(fifo_sequence_item) rexport;
+  virtual uvm_interface vif;
+  uvm_analysis_port#(fifo_sequence_item) rexport;
     
   //--------------------------------------------------------
   //Constructor
@@ -627,11 +626,12 @@ class fifo_scoreboard extends uvm_test;
       // compare it with actual value
       // score the transactions accordingly
       */
+
       fifo_sequence_item curr_trans;
       wait((transactions.size() != 0));
       curr_trans = transactions.pop_front();
       compare(curr_trans);
-      
+
     end
     
   endtask: run_phase
@@ -646,7 +646,7 @@ class fifo_scoreboard extends uvm_test;
 actual = curr_trans.rdata;
 expected = mem[curr_trans.rptr2];   
 
-if (curr_trans.rinc) begin
+if( curr_trans.rinc) begin
 	//if(mem[curr_trans.rptr2] != curr_trans.rdata)    
 	if(actual != expected) begin
       `uvm_error("COMPARE", $sformatf("Transaction failed! ACT=%d, EXP=%d", actual, expected))
@@ -740,7 +740,7 @@ class fifo_test extends uvm_test;
     `uvm_info("TEST_CLASS", "Build Phase!", UVM_HIGH)
 
     env = fifo_environment::type_id::create("env", this);
-      wtest_seq = fifo_write_sequence::type_id::create("wtest_seq");
+     wtest_seq = fifo_write_sequence::type_id::create("wtest_seq");
 	rtest_seq = fifo_read_sequence::type_id::create("rtest_seq");
   endfunction: build_phase
 
@@ -787,17 +787,17 @@ endfunction: report_phase
     phase.raise_objection(this);
 
     //reset_seq
-    reset_seq = fifo_sequence::type_id::create("reset_seq");
-    reset_seq.start(env.wagnt.wseqr);
-    reset_seq.start(env.ragnt.rseqr);
+    //reset_seq = fifo_sequence::type_id::create("reset_seq");
+    //reset_seq.start(env.wagnt.wseqr);
+    //reset_seq.start(env.ragnt.rseqr);
     //#10;
+//phase.raise_objection(this);
 
-    repeat(15) begin
+    repeat(10) begin
       //test_seq
 	fork
       wtest_seq.start(env.wagnt.wseqr);
 	rtest_seq.start(env.ragnt.rseqr);
-      //#10;
 join_any
     end
     
