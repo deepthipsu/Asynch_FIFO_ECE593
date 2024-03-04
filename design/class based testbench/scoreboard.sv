@@ -16,7 +16,7 @@ class scoreboard;
   mailbox mon2scb;
   
   //used to count the number of transactions
-  int no_transactions = 0;
+  int no_transactions = 1;
   
   //constructor
   function new(mailbox mon2scb);
@@ -35,7 +35,7 @@ class scoreboard;
 	no_transactions++;
 	end
         else begin
-          $display("Result is as Expected: %0d Actual: %0d       Time: %0t",(trans.rdata),mem[trans.rptr2], $time);
+          $display("Result is as Expected: %0d Actual: %0d TransactionID:  %0d      Time: %0t",(trans.rdata),mem[trans.rptr2], no_transactions, $time);
       //trans.display("[ Scoreboard ]");
 	no_transactions++;
 	end
