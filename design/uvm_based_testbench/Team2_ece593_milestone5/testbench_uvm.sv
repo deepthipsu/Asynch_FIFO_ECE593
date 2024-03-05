@@ -11,12 +11,24 @@
 
 import uvm_pkg::*;
 `include "uvm_macros.svh"
+//`include "interface_uvm.sv"
 
 //--------------------------------------------------------
 //Include Files
 //--------------------------------------------------------
 `include "interface_uvm.sv"
 `include "fifo_sequence_item.sv"
+`include "fifo_sequencer.sv"
+`include "fifo_sequence.sv"
+`include "fifo_sequences.sv"
+`include "fifo_driver.sv"
+`include "fifo_monitor.sv"
+`include "fifo_agent.sv"
+`include "fifo_coverage.sv"
+
+`include "fifo_scoreboard.sv"
+`include "fifo_environment.sv"
+`include "fifo_test.sv"
 
 
 module tb_fifo_uvm;
@@ -62,6 +74,8 @@ initial begin
 
   initial begin 
     run_test("fifo_test");
+    run_test("fifo_test_wfull");
+    run_test("fifo_test_rempty");
   end
 
   initial begin
