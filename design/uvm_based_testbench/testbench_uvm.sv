@@ -11,12 +11,24 @@
 
 import uvm_pkg::*;
 `include "uvm_macros.svh"
+//`include "interface_uvm.sv"
 
 //--------------------------------------------------------
 //Include Files
 //--------------------------------------------------------
 `include "interface_uvm.sv"
 `include "fifo_sequence_item.sv"
+`include "fifo_sequencer.sv"
+`include "fifo_sequence.sv"
+`include "fifo_sequences.sv"
+`include "fifo_driver.sv"
+`include "fifo_monitor.sv"
+`include "fifo_agent.sv"
+`include "fifo_coverage.sv"
+`include "fifo_scoreboard.sv"
+`include "fifo_environment.sv"
+`include "fifo_test.sv"
+
 
 module tb_fifo_uvm;
 
@@ -57,81 +69,17 @@ initial begin
   end
   
 
-covergroup zeros_or_ones_on_ops;
 
-      a_leg: coverpoint fifoTBintf.wdata {
-         bins zeros = {'h00};
-         bins others= {['h01:'hFE]};
-         bins ones  = {'hFF};
-	 bins allBitsIn[] = {[8'b00000000:8'b11111111]};
-      }
-
-      b_leg: coverpoint fifoTBintf.rdata {
-         bins zeros = {'h00};
-         bins others= {['h01:'hFE]};
-         bins ones  = {'hFF};
-	 bins allBitsOut[] = {[8'b00000000:8'b11111111]};
-      }
-endgroup
-
-covergroup fifoInterfaceSignalsCG;
-
-      a_leg: coverpoint fifoTBintf.wrst_n {
-         bins zeros = {'b0};
-         bins ones  = {'b1};
-      }
-
-      b_leg: coverpoint fifoTBintf.rrst_n {
-         bins zeros = {'b0};
-         bins ones  = {'b1};
-      }
-      c_leg: coverpoint fifoTBintf.winc {
-         bins zeros = {'b0};
-         bins ones  = {'b1};
-      }
-
-      d_leg: coverpoint fifoTBintf.rinc {
-         bins zeros = {'b0};
-         bins ones  = {'b1};
-      }
-      e_leg: coverpoint fifoTBintf.wfull {
-         bins zeros = {'b0};
-         bins ones  = {'b1};
-      }
-
-      f_leg: coverpoint fifoTBintf.rempty {
-         bins zeros = {'b0};
-         bins ones  = {'b1};
-      }
-endgroup
-
-zeros_or_ones_on_ops dataWrite;
-zeros_or_ones_on_ops dataRead;
-fifoInterfaceSignalsCG fifoInterfaceSignals;
-
-initial begin : coverage
-	dataWrite = new();
-	dataRead = new();
-	fifoInterfaceSignals = new();
-	fork
-	forever begin
-		@(negedge wclk);
-			dataWrite.sample();
-			fifoInterfaceSignals.sample();
-	end
-	forever begin
-		@(negedge rclk);
-			dataRead.sample();
-	end
-	join_none
-end: coverage	
 
   initial begin 
     run_test("fifo_test");
+   // run_test("fifo_test_wfull");
+   // run_test("fifo_test_rempty");
+$finish;
   end
 
   initial begin
-    #50000;
+    #5000000;
     $display("Sorry! Ran out of clock cycles!");
     $finish();
   end
