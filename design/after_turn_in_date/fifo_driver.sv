@@ -54,7 +54,7 @@ class fifo_write_driver extends uvm_driver#(fifo_sequence_item);
   //[Method] Drive
   //-------------------------------------------------------- 
  
-  task drive_write(fifo_item_t item);
+  task drive_write(input fifo_item_t item);
     do begin
     	vif.wdata <= item.wdata;
     	vif.winc <= item.winc;
@@ -123,7 +123,7 @@ class fifo_read_driver extends uvm_driver#(fifo_sequence_item);
   //[Method] Drive
   //-------------------------------------------------------- 
  
-  task drive_read(fifo_item_t item);
+  task drive_read(input fifo_item_t item);
     	vif.rinc <= item.rinc;
       vif.rrst_n <= item.rrst_n;
       @(posedge vif.rclk);
