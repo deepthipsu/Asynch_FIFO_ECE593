@@ -45,21 +45,22 @@ class fifo_write_monitor extends uvm_monitor;
   //Run Phase
   //--------------------------------------------------------
   virtual task run_phase (uvm_phase phase);
-    //super.run_phase(phase);
-    //`uvm_info("MONITOR_CLASS", "Inside Run Phase!", UVM_HIGH)
-    //item = fifo_sequence_item::type_id::create("item");
  forever begin
+	sample();
+    end
+  endtask: run_phase
+  
+  task sample ();
       fifo_item_t item = fifo_item_t::type_id::create();    
       item.wdata = vif.wdata;
       item.winc = vif.winc;
       item.wrst_n = vif.wrst_n;
       item.wfull = vif.wfull;
-  `uvm_info("MONITOR", $sformatf("DATA =%d  TransactionID =%d", vif.wdata, burst_count), UVM_LOW)
+  //`uvm_info("MONITOR", $sformatf("DATA =%d  TransactionID =%d", vif.wdata, burst_count), UVM_LOW)
 @(posedge vif.wclk)
 	monitor_port.write(item);
-    end
-  endtask: run_phase
-  
+  endtask: sample
+
 endclass: fifo_write_monitor
 
 
@@ -105,18 +106,20 @@ class fifo_read_monitor extends uvm_monitor;
   //Run Phase
   //--------------------------------------------------------
   virtual task run_phase (uvm_phase phase);
-    //super.run_phase(phase);
-    //`uvm_info("MONITOR_CLASS", "Inside Run Phase!", UVM_HIGH)
-    forever begin
+ forever begin
+	sample();
+    end
+  endtask: run_phase
+
+   task sample ();
       fifo_item_t item = fifo_item_t::type_id::create("item");
       item.rinc = vif.rinc;  
       item.rrst_n = vif.rrst_n;
       item.rempty = vif.rempty;  
       item.rdata = vif.rdata;  
  // `uvm_info("MONITOR", $sformatf("DATA =%d  TransactionID =%d", vif.wdata, burst_count), UVM_LOW)
-      // send item to scoreboard
+
 @(posedge vif.rclk) //begin
  monitor_port.write(item);
-end   
-  endtask: run_phase
+  endtask: sample
 endclass: fifo_read_monitor
