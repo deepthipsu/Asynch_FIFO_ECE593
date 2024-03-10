@@ -41,7 +41,7 @@ class fifo_write_sequence extends uvm_sequence#(fifo_sequence_item);
    // `uvm_info("TEST_SEQ", "Inside body task!", UVM_HIGH)
 	fifo_item_t item;
 	repeat(repeat_counts) begin
-		item = fifo_item_t::type_id::create("");
+		item = fifo_item_t::type_id::create();
     		start_item(item);
 		assert(item.randomize() with {rinc == 1'b0;});
 		finish_item(item);
@@ -71,7 +71,7 @@ class fifo_read_sequence extends uvm_sequence#(fifo_sequence_item);
    // `uvm_info("TEST_SEQ", "Inside body task!", UVM_HIGH)
 	fifo_item_t item;
 	repeat(repeat_counts) begin
-		item = fifo_item_t::type_id::create("item");
+		item = fifo_item_t::type_id::create();
     		start_item(item);
 		assert(item.randomize() with {winc == 1'b0;});
 		finish_item(item);
