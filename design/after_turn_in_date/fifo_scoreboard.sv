@@ -1,16 +1,12 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-`uvm_analysis_imp_decl(_w)
-`uvm_analysis_imp_decl(_r)
+
 class fifo_scoreboard extends uvm_scoreboard;
   `uvm_component_utils(fifo_scoreboard)
-
-  uvm_analysis_imp #(fifo_sequence_item, fifo_scoreboard) scoreboard_port;
+    typedef fifo_sequence_item fifo_item_t;
+  uvm_analysis_imp #(fifo_item_t, fifo_scoreboard) scoreboard_port;
   
   typedef fifo_scoreboard fifo_scoreboard_t;
   typedef fifo_coverage	fifo_coverage_t;
-    typedef fifo_sequence_item fifo_item_t;
-  uvm_analysis_imp_w#(fifo_item_t, fifo_scoreboard_t) 	wimp;
-  uvm_analysis_imp_r#(fifo_item_t, fifo_scoreboard_t) 	rimp;
+
   
 localparam FIFO_LEN = 	1 << POINTERSIZE;
   //golden fifo
@@ -37,11 +33,22 @@ localparam FIFO_LEN = 	1 << POINTERSIZE;
     `uvm_info("SCB_CLASS", "Build Phase!", UVM_HIGH)
    
     scoreboard_port = new("scoreboard_port", this);
-        wimp = new("wimp", this);
-    rimp = new("rimp", this);
+
   endfunction: build_phase
   
+   //--------------------------------------------------------
+  //Write Method
+  //--------------------------------------------------------
   
+  //write methods
+  virtual function void write(input fifo_item_t item);
+    item.t = $time;
+    wq.push_back(item);
+    rq.push_back(item);
+    `uvm_info(get_name(), $sformatf("received write trans: %s\n", item.wconvert2string()), UVM_LOW);
+  endfunction
+  
+
 
    virtual function void check_phase(uvm_phase phase);
     int i = 0;
@@ -75,21 +82,7 @@ localparam FIFO_LEN = 	1 << POINTERSIZE;
     
   endfunction
   
-  
-  //write methods
-  virtual function void write_w(input fifo_item_t item);
-    item.t = $time;
-    wq.push_back(item);
-    
-    //`uvm_info(get_name(), $sformatf("received write trans: %s\n", trans.wconvert2string()), UVM_MEDIUM);
-  endfunction
-  
-  virtual function void write_r(input fifo_item_t item);
-    item.t = $time;
-	rq.push_back(item);
-    
-    //`uvm_info(get_name(), $sformatf("received read trans: %s\n", trans.rconvert2string()), UVM_MEDIUM);
-  endfunction
+
   
   
   //helper functions
